@@ -1,6 +1,6 @@
 # 文档协议与产物规范（06）
 
-> 来源：EasyMint `template/`（AGENTS.md/task.json/README.md）、`RULES.md`、`CLAUDE.md`（编码规范/文档分级）、`app/main/services/task/task-file.ts`（task.json 读写）、`resources/skills/dev-docs/`（文档体系）。
+> 本文件承载文档协议与产物规范。
 > 承载文档四层体系、task.json 真相源协议、运行配置、委派产物规范。
 
 ## 一、文档四层体系（dev-docs 规范）
@@ -23,9 +23,9 @@
 - **对内（开发者/AI，本地私有）**：开发记录、设计文档、需求文档、技术架构、待办、发版流程——可写决策、背景、机制与私有细节
 - **私有边界**：用户私有信息（路径/环境/个人背景）只进 docs/，不进公开仓库
 
-**规划方案定稿即落盘**：任何多步骤设计方案（≥3 步或跨 2 个文件）定稿后必须写入 `docs/design/`，不能只存在于对话中——上下文压缩会丢对话内容，磁盘文档是唯一真相源。落盘时机：方案定稿（用户确认后）即写，不等会话结束。
+**规划方案定稿即落盘**：任何多步骤设计方案（≥3 步或跨 2 个文件）定稿后必须写入 `docs/design/`，不能只存在于对话中——上下文压缩会丢对话内容，磁盘文档是方法论核心承载。落盘时机：方案定稿（用户确认后）即写，不等会话结束。
 
-## 二、task.json 协议（任务唯一真相源）
+## 二、task.json 协议（任务方法论核心承载）
 
 ### 结构
 
@@ -49,17 +49,17 @@
 
 `pending → building → evaluating → done | failed`
 
-- **building/evaluating**：Mint 手动调 set_task_status（调 Builder 前 building、交 Evaluator 前 evaluating）
+- **building/evaluating**：主 Agent 手动调任务状态同步（调 Builder 前 building、交 Evaluator 前 evaluating）
 - **done/failed**：由委派执行结果**自动回写**（单任务一进入终态立即回写，不等委派整体收尾）；手动标记终态会被拒绝
-- **status 只是辅助快照**（可能滞后或缺失）：Mint 是进度监控者，每轮自行核实真实进度（git diff/代码/escalation.json），凭代码现状判断该重做/验收/跳过
+- **status 只是辅助快照**（可能滞后或缺失）：主 Agent 是进度监控者，每轮自行核实真实进度（git diff/代码/escalation.json），凭代码现状判断该重做/验收/跳过
 
 ### 需求变更
 
-评估影响 → 已完成保留、受影响更新、新增追加末尾 → refresh_tasks → 继续 Builder/Evaluator 循环。项目从 done 回到 developing 是常态。变更重大时先告知用户。
+评估影响 → 已完成保留、受影响更新、新增追加末尾 → 刷新任务列表 → 继续 Builder/Evaluator 循环。项目从 done 回到 developing 是常态。变更重大时先告知用户。
 
-## 三、运行配置（.easymint/run.json）
+## 三、运行配置（.agent-config/run.json）
 
-`.easymint/run.json` 由运行面板读取，每条 commands 显示为一个可一键启动/停止的按钮（含端口状态）。文件变化时面板自动刷新。
+`.agent-config/run.json` 由运行配置读取，每条 commands 显示为一个可一键启动/停止的按钮（含端口状态）。文件变化时配置自动刷新。
 
 - 生成时机：项目完成时、用户问「怎么启动/加运行命令」、写常用脚本（运行/构建/打包/安装/发版部署等）
 - 格式细节见已安装的 project-run skill（SKILL.md 提供完整格式规范）
@@ -84,8 +84,8 @@
 
 ### escalation / decision 协议
 
-- escalation.json：`{ type: "escalation", from, taskId, reason, details, options: ["重试","跳过","人工介入"], timestamp }`——Builder/Evaluator 受阻时写，Mint 读后向用户汇报
-- decision.json：`{ taskId, action: "retry"|"skip"|"abort", reason?, timestamp }`——用户决策后 Mint 写，然后继续执行
+- escalation.json：`{ type: "escalation", from, taskId, reason, details, options: ["重试","跳过","人工介入"], timestamp }`——Builder/Evaluator 受阻时写，主 Agent 读后向用户汇报
+- decision.json：`{ taskId, action: "retry"|"skip"|"abort", reason?, timestamp }`——用户决策后主 Agent 写，然后继续执行
 
 ## 五、编码规范要点（承接 CLAUDE.md §二）
 
@@ -111,7 +111,7 @@
 ### 排查与修复
 
 - **排查问题优先加日志**：行为不符合预期时，先在关键路径加日志看实际输入输出，用日志定位问题，不要猜
-- 查不明原因就按理想化预期重写（状态广播完备、唯一真相源、消除竞态窗口、失败路径兜底）
+- 查不明原因就按理想化预期重写（状态广播完备、方法论核心承载、消除竞态窗口、失败路径兜底）
 - **用户实测即真相**：永远不怀疑用户在用旧代码——用户实测结果就是事实；现象与代码逻辑矛盾时先找自己理解或复现方式的盲区
 
 ### 模块独立自治

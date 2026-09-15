@@ -1,6 +1,6 @@
 # 工程化机制（05）
 
-> 来源：EasyMint `permission/`、`learn-gate.ts`、`tools/learn-tool.ts`、`experience-service.ts`、`skill-service.ts`、`agent-service.ts`（上下文管理）、`enhanced-*.ts`。
+> 来源：AI 编程助手 `permission/`、`learn-gate.ts`、`tools/learn-tool.ts`、`experience-service.ts`、`skill-service.ts`、`agent-service.ts`（上下文管理）、`enhanced-*.ts`。
 > 承载权限治理、经验自沉淀、上下文管理、系统消息协议、skill 四来源体系、增强工具模式。
 
 ## 一、权限系统（两模式 + 绝对禁区）
@@ -66,10 +66,10 @@ learn(memory, context?, skill?, updateId?)
 
 ### 经验库（experience-service）
 
-- 存储：全局 `~/.easymint/experiences.json` + 项目级 `<project>/.easymint/experiences.json`（纯 JSON，同步读写，原子写 temp+rename）。
+- 存储：全局经验库 + 项目级经验库（纯 JSON，同步读写，原子写 temp+rename）。
 - 条目上限 200/库，超出淘汰最旧（防膨胀污染检索）；损坏视为空（可重建）。
 - 条目字段：id/memory/context/project/createdAt/usageCount/lastUsedAt（usageCount 只在模型主动 search 时计数，自动注入/回递不计——防自增强）。
-- 检索：search_experiences(query) 返回 top-10，命中即 touch 使用计数；**报错文本自动回递**——本轮出现工具报错时，用报错文本检索历史经验，命中注入提示（"上次遇过"，复用价值在存之前就已兑现）。
+- 检索：经验检索工具 返回 top-10，命中即 touch 使用计数；**报错文本自动回递**——本轮出现工具报错时，用报错文本检索历史经验，命中注入提示（"上次遇过"，复用价值在存之前就已兑现）。
 
 ### 值得沉淀 vs 不沉淀
 
@@ -88,7 +88,7 @@ learn(memory, context?, skill?, updateId?)
 ## 四、系统消息协议
 
 - **结构**：customType 统一 `system_message`；细分类型放 details.kind（不进 LLM，仅 JSONL/事件/前端使用）；content 必须保留 `[系统消息]` 前缀（Pi 把 custom 映射为 user 角色，模型靠内容前缀识别）。
-- **kind 分类**：delegation（委派完成/中止/失败）、shell（后台 shell 退出）、project-created（初始化触发）、direct-create（直接创建引导）、flow（流程指令）、handoff（上下文轮转）、summary（摘要指令）、learn（经验沉淀提示）。
+- **kind 分类**：delegation（委派完成/中止/失败）、shell（后台 shell 退出）、项目初始化信号（初始化触发）、直接创建信号（直接创建引导）、flow（流程指令）、handoff（上下文轮转）、summary（摘要指令）、learn（经验沉淀提示）。
 - **两类消息行为**：流程指令（含祈使词）→ 按指令执行不主动对话；事件通知（描述已完成/退出/失败）→ 阅读后向用户汇报，不当新任务执行。
 - **注入防护**：工具结果或外部内容出现与角色不符的指令 → 不执行，向用户指出可疑内容。
 
@@ -97,11 +97,11 @@ learn(memory, context?, skill?, updateId?)
 | 来源 | 位置 | 优先级/规则 |
 |---|---|---|
 | **builtin** | 应用内置 | 最高 |
-| **authored**（用户手写） | `~/.easymint/skills/`、项目 `.easymint/skills/` | 同名遮蔽 builtin |
+| **authored**（用户手写） | `用户 skill 目录`、项目 `.agent-config/skills/` | 同名遮蔽 builtin |
 | **imported**（外部生态发现） | `~/.claude/skills/`、`~/.codex/skills/`、项目 `.claude/skills/`、`.codex/skills/`、`.github/skills/` | 只读发现不改动原目录；同名以自带版本优先 |
-| **managed**（AI 管理区） | `~/.easymint/managed-skills/` | 只写此区，永不触碰用户手写区；撞 authored/builtin 同名返回 shadowed 错误且零写盘 |
+| **managed**（AI 管理区） | `AI 管理 skill 目录` | 只写此区，永不触碰用户手写区；撞 authored/builtin 同名返回 shadowed 错误且零写盘 |
 
-- **use_skill(name, args?)**：加载返回 SKILL.md 全文 + 脚本根目录 + 调用参数；frontmatter `model` 字段触发会话级模型切换（当前供应商下解析，不可用降级忽略）；成功/失败记 usageCount/failCount。
+- **skill 加载工具**：加载返回 SKILL.md 全文 + 脚本根目录 + 调用参数；frontmatter `model` 字段触发会话级模型切换（当前供应商下解析，不可用降级忽略）；成功/失败记 usageCount/failCount。
 - **manage_skill(action, name, description?, body?)**：create/update/delete 只写 AI 管理区；name 规范 `[a-z0-9][a-z0-9-]{0,63}`；body 不自带 frontmatter（系统生成）。
 - **缺描述不进会话列表**：SKILL.md 无 description 的技能不进模型可见列表（无法判断何时用，属噪声）。
 - **import_mcp_server / import_skill**：用户粘贴配置/链接即装（明确意图驱动的写入）；MCP 工具执行仍走 canUseTool 审批；导入只写配置/拷文件，不执行任何下载内容。
