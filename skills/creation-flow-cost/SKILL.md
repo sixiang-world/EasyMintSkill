@@ -51,3 +51,33 @@ description: >-
 - **不要隐瞒免费额度的限制**：推荐免费额度时必须讲清「有时效性/限量，非长久之计」
 - **不要替用户做取舍**：用户确认的是「取舍」，不是技术选择——给出选项让用户拍板
 - **不要忽略商业场景的合规成本**：商业交付场景必须附成本核算 + 合规提示（隐私/支付/数据）+ 维护说明
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 预算这种小事，等实现的时候自然会解决
+- 用户说「钱不是问题」，那就不用校验成本了
+- 现在谈收费用户会觉得我在劝退，先不吭声
+- 免费额度很多家都有，差不多够用，不用细说限制
+- 这笔钱应该不多，估个数扔上去就行
+- 免费 + AI 也不一定非要花钱吧，可能有免费接口
+- 无冲突，那就什么都不用提，跳过就行
+- 先做出来，等用户真的收到账单再说
+
+**All of these mean: 对照功能清单校验成本冲突，冲突时给出具体取舍选项让用户拍板。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "Budget is a detail we can settle later" | Cost is an architectural constraint, not a detail — it decides which features are even buildable. |
+| "The user said money isn't an issue" | "Not an issue" is not "unlimited". Confirm the actual ceiling before designing against it. |
+| "Mentioning cost now will scare them off" | Discovering a bill after launch scares them off harder. Quote it up front. |
+| "Free tiers are everywhere, that's basically enough" | Free tiers are time-limited and capped by request volume. Say so, or you're selling a dead end. |
+| "The amount is small, I'll just estimate something" | A made-up number becomes a broken promise. Mark it as an estimate, cite the provider's pricing. |
+| "Free budget plus AI probably has a free option somewhere" | AI integration is metered API usage. There is no free tier that survives real use. |
+| "No conflict found, so I can skip the topic entirely" | Correct — no conflict means skip silently. But "skip" means after checking, not instead of checking. |
+| "Better to build first and react to the bill" | The bill arrives whether or not the user agreed to it. Conflict found later is rework plus a dispute. |
+
+> 中文说明：默认不主动展开成本话题，但「默认跳过」的前提是**已经校验过**。免费预算撞上 AI/云端/支付/短信必然冲突，必须主动指出并给 2-3 个具体取舍选项（换厂商 / 接受成本 / 砍功能），由用户拍板。

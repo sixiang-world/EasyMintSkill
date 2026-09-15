@@ -18,3 +18,10 @@
 *.js   text eol=lf
 *.json text eol=lf
 *.yml  text eol=lf
+
+# Shell 脚本必须是 LF——CRLF 会导致 *nix 下 "bad interpreter" 失败
+*.sh    text eol=lf
+*.bash  text eol=lf
+sdd-workspace  text eol=lf
+task-brief     text eol=lf
+review-package text eol=lf

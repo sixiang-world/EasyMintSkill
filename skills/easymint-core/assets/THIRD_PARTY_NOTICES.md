@@ -51,6 +51,46 @@
 
 ---
 
+## 2.5 方法论来源：obra/superpowers
+
+本包的**执行期纪律 skill 与部分机制**，在设计与措辞上借鉴（部分段落直接采用）了开源项目 **Superpowers**：
+
+- 项目：https://github.com/obra/superpowers
+- 作者：Jesse Vincent 与 Prime Radiant（https://primeradiant.com）
+- 许可：**MIT License**
+
+### 借鉴范围
+
+下列 skill 与机制源自或改编自 Superpowers：
+
+| 本包内容 | Superpowers 对应 |
+|---|---|
+| `using-easymint`（强制触发层 + Red Flags 表） | `using-superpowers` |
+| `test-driven-development` | 同名 skill |
+| `systematic-debugging`（含 root-cause-tracing / defense-in-depth / condition-based-waiting） | 同名 skill 及同名 references |
+| `verification-before-completion`（Iron Law + Gate Function） | 同名 skill |
+| `using-git-worktrees` | 同名 skill |
+| `finishing-a-development-branch` | 同名 skill |
+| `requesting-code-review`（含 `references/code-reviewer.md`） | 同名 skill |
+| `receiving-code-review`（Response Pattern + 反服从机制） | 同名 skill |
+| `dispatching-parallel-agents` | 同名 skill |
+| `writing-plans` / `executing-plans` | 同名 skill |
+| `subagent-driven-development`（两阶段 review / ledger / breaker / 三个 prompt 模板 / 三个脚本） | 同名 skill 及附属文件 |
+| `writing-skills`（含三份 references 与 graphviz 约定） | 同名 skill 及同名 references |
+| `easymint-core` 的 Evaluator 两阶段升级、fix loop、Rulings not stalls | `subagent-driven-development` + `writing-skills` |
+| 各 skill 的 `Red Flags` 与 `Common Rationalizations` 表 | 上述各 skill 的同名段落 |
+
+### 改编说明
+
+本包的改编包括：正文改写为中文（`Red Flags` / `Common Rationalizations` 表与 prompt 模板保留英文原文，因这些措辞的心理阻断效果依赖原文）；去除平台专属内容（原项目的多 harness 适配层、特定运行时的工具名与配置路径）；项目状态目录统一为本包约定的 `.agentskill/`。
+
+**Superpowers 的 MIT 许可要求保留其版权声明**。若你分发本包，请一并保留本节。
+
+---
+
 ## 3. 免责
 
 本声明的目的是**如实说明来源**，不代表本包已就上述第三方内容取得完整授权。若你是某项资产的权利人并认为本仓库的分发不当，请通过仓库 issue 联系，我们会及时处理。
+
+对本包改编自 Superpowers 的部分，适用其 MIT 许可；对其余第三方资产（品牌规范库、模板），适用上文各自的限制。
+

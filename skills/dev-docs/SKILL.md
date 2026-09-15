@@ -117,3 +117,33 @@ docs/技术架构.md          架构设计（只追加，记录技术选型与�
 - **不要把内部实现写进 CHANGELOG**：CHANGELOG 只记用户可见变更，不写机制/实现细节/内部规则
 - **不要留占位符**：生成文档时所有 {{PROJECT_NAME}}、[待填写] 必须替换为实际内容，禁止留空
 - **不要跳过会话交接更新**：每次会话结束必须更新开发记录头部快照，新会话开始先读快照
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 先把功能做完，文档最后统一补一份
+- 这次改动太小了，不值得记进开发记录
+- 模板里的占位符用户一看就懂，回头他会自己填
+- CHANGELOG 和开发记录差不多，写一个就够了
+- 会话要结束了，快照下次会话再更新也一样
+- 历史记录里有条写错了，顺手改掉更干净
+- 架构没大变，技术架构文档不用动
+- 文档要写这么多字，占用了开发时间
+
+**All of these mean: 任务完成即追加当天明细 + 更新导航页快照，占位符全部替换为实际内容。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "Finish the features first, write all the docs at the end" | Retrospective docs are reconstructed from memory — they lose the decisions and the root causes, which are the only parts worth keeping. |
+| "This change is too small to record" | Small changes are exactly what the daily log exists for. The next session cannot infer them from the diff. |
+| "The placeholder is obvious, they'll fill it in" | A placeholder that ships is a broken document. Replace it or mark ⚠️ 待确认 and say so. |
+| "CHANGELOG and the dev log say the same thing, one is enough" | Different readers: CHANGELOG is user-visible changes per release, the dev log is process per day. Merging loses both. |
+| "I'll refresh the snapshot next session" | Next session starts by reading that snapshot. A stale snapshot is worse than none — it misleads. |
+| "There's an error in the history, I'll just correct it" | Daily details are append-only. Correct with a new appended note so the record stays traceable. |
+| "The architecture didn't really change, skip the doc" | Architecture-level decisions are what nobody can recover from code later. If you decided it, append it. |
+| "Writing docs eats into build time" | Docs are the handoff medium. Without them, every session restarts from zero — that is the real cost. |
+
+> 中文说明：文档是给下一个会话（或下一个人）看的交接物，不是给自己看的总结——所以「以后补」等于丢失。明细只增不改，改历史要用追加更正说明。极简项目（单文件/无依赖）不建文档体系，这条例外只适用于极简。

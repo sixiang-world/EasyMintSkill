@@ -98,3 +98,35 @@ terse prose). "stop ponytail" / "normal mode": revert. Level persists until
 changed or session end.
 
 The shortest path to done is the right path.
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 加一层抽象以后会更好扩展
+- 以后可能会用到，先留着
+- 这个模式更"正确"，业界都这么写
+- 写个配置项吧，万一以后要改
+- 现在多写点，将来省事
+- 单测先不写了，功能比较明显
+- 复杂点没关系，看起来更专业
+- 用户没明说要，但加上他肯定满意
+- 这是"基础设施"，不算过度工程
+
+**All of these mean: 回到 ladder 第一级——这个东西现在必须存在吗？不需要就删掉，一行说明即可。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "An abstraction layer will be more flexible later" | Flexible for what? One implementation is not a pattern — inline it until a second one exists. |
+| "We might need it later" | Later can build it for itself. Speculative need is rung 1: skip it. |
+| "This pattern is more correct" | Correct for a codebase that needs it. Agreeing with a blog post is not a requirement. |
+| "Let's make it configurable in case it changes" | Config for a value that never changes is a value nobody sets. Hardcode it. |
+| "Writing more now saves work later" | Unwritten code has zero maintenance cost. That is the saving. |
+| "I'll skip the test, the logic is obvious" | Obvious logic with a branch, loop, or money path gets ONE runnable check. Not a suite — one assert. |
+| "More structure looks more professional" | Clever and layered is what someone decodes at 3am. Boring ships. |
+| "They didn't ask, but they'll like the extra" | Unrequested extras are scope you now own. Ship what was asked; mention the rest in one line. |
+| "This is infrastructure, so it doesn't count" | "Infrastructure" is the most common word for an unrequested abstraction. Rung 1 applies to it too. |
+
+> 中文说明：ladder 是反射不是研究项目——两级成立就取更高那级往前走。第一次能跑通的懒方案就是对的方案。唯一不能简化的是信任边界的输入校验、防数据丢失的错误处理、安全与无障碍这些（见 When NOT to be lazy）。

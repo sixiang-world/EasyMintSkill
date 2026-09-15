@@ -45,3 +45,33 @@ description: >-
 - **不要给技术灵感清单**：没想法时给产品方向（记账/社区/打卡），不给技术方向（做个 CLI/写个 API）
 - **不要跳过理解草案**：用户说完想法后必须先给草案让用户改，不能直接进入功能清单
 - **不要把「没想法」当失败**：用户说「不知道做什么」是正常状态，给灵感清单即可，不催促
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 用户给的信息已经够多了，可以开始做功能清单了
+- 再问下去用户会烦，先建个草案往下走
+- 意图这么模糊，我替用户想一个合理的就行
+- 用户说「随便」「都行」，那就按最常规的理解来
+- 他提到 React，那就是想做前端应用，需求已经明确了
+- 已经问了两轮，前沿肯定清空了
+- 用户催得急，澄清留到后面遇到问题再说
+- 这个想法太大了，先不指出，做着做着就清楚了
+
+**All of these mean: 继续采集，直到「前沿清空」并复述理解草案等用户确认。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "I have enough to start the feature list" | Enough for a guess, not for a build. Frontline empty is the completion test, not "I feel informed." |
+| "More questions will annoy the user" | Each question carries a recommended default — that is guidance, not interrogation. One at a time. |
+| "Their intent is vague, so I'll pick a reasonable interpretation" | A reasonable interpretation you never confirmed is an assumption you will pay for twice. Draft it, show it, let them edit. |
+| "They said 'whatever', so I'll take the standard reading" | "Whatever" means they need options, not silence. Offer 2–3 concrete directions. |
+| "They mentioned React, so the requirement is clear" | Technology is a preference, not a requirement. Ask what problem it solves and who uses it. |
+| "Two rounds in, the frontline must be clear" | Frontline is clear when no answerable question has a settled premise — count that, not your rounds. |
+| "The user is rushing, I can clarify later" | Clarifying later means re-clarifying after the build went the wrong way. |
+| "The idea is big — I'll just start and let it narrow" | Big ideas narrow into MVP only when someone asks which core value comes first. That someone is you. |
+
+> 中文说明：完工判据是「前沿清空」，不是「问了几轮」；事实性问题自己查（网页抓取），不抛给用户。意图模糊时给具体选项，不给开放问答。用户没说清细节是常态，不是可以替他决定的理由。

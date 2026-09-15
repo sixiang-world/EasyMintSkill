@@ -93,3 +93,33 @@ description: >-
 - **不要把原型迭代委派给 Builder**：prototype/index.html 的小改由主 Agent 直接改，大改才重新委派设计师 Agent——Builder 是工程实现，不是设计
 - **不要在原型确认前写完整文档**：需求文档 + 技术架构 + task.json 在原型确认（G4）后才写，原型可能调整需求和架构
 - **不要为静态 HTML 项目出原型**：极简/简单/无 UI 项目跳过原型阶段，直接进入技术方案或编码
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 需求已经很清楚了，不用再确认，直接委派设计师
+- 原型就是画个大概，渲染细节不用审，用户能看懂就行
+- 从代码看肯定没问题，直接打开给用户看吧
+- 反正用户还会提意见，第一版不用太较真
+- 不如跳过原型，直接写正式代码更快
+- Playwright 跑一下截图确认更快，比逐行读 CSS 靠谱
+- 这是个小改动，改完不用再审了
+- 用户之前的偏好我心里有数，不用再问一遍
+
+**All of these mean: 先复述需求等用户确认，再委派；出图后逐条做代码级渲染审查，通过才展示。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "Requirements are clear, no need to realign before delegating" | The prototype is the alignment artifact. Skipping it means the designer guesses — and you rebuild. |
+| "A prototype is rough, rendering details can wait" | A prototype that renders broken teaches the user the wrong product. Verify from code before showing anything. |
+| "It looks fine in the code, I'll just open it" | "Looks fine" is the exact failure mode the checklist exists for — CSS var errors and hidden overlays are invisible until they aren't. |
+| "The user will give feedback anyway, v1 doesn't need to be right" | Feedback on a broken render is wasted feedback. Fix the render, then collect real notes. |
+| "Skipping the prototype and writing real code is faster" | It is faster to the wrong UI. The prototype is the cheapest place to be wrong. |
+| "Screenshotting with Playwright is more reliable than reading CSS" | The review targets code-level defects and the model may not see images. Code reasoning only — opening for the user is a separate step. |
+| "This is a small tweak, no need to re-review" | Every edit gets one render review. Small edits break layouts just as often as big ones. |
+| "I already know their style preference" | Knowing it is not confirming it. Restate the plan and get a "go". |
+
+> 中文说明：原型的价值在于「先看再定」，没对齐就动手等于白做一轮。渲染审查只从代码推理（不用 Playwright/截图/起服务器），审查与「打开给用户看」是两件事；任何改动后都要重审一次。

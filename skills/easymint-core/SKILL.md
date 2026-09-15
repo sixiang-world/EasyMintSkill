@@ -26,10 +26,15 @@ description: >-
 |---|---|
 | 重建/注入主 Agent 提示词（含 13 条规则全量） | `references/01-main-system-prompt.md` |
 | 委派 Builder/Evaluator/设计师，或自建 Agent 模板 | `references/02-agent-templates.md` |
-| 多 Agent 编排：何时委派、task 协议、结果收集、并发与上下文保护 | `references/03-orchestration.md` |
+| 多 Agent 编排：任务循环、两阶段审查、fix loop、ledger、裁决准则 | `references/03-orchestration.md` |
 | 创建项目引导：7 Gate、复杂度/场景判定、技术方案、项目档案组合 | `references/04-creation-flow.md` |
 | 工程化：权限治理、经验沉淀、上下文管理、系统消息、skill 体系 | `references/05-engineering.md` |
 | 文档四层体系、task.json/run.json 规范、委派产物协议 | `references/06-docs-protocol.md` |
+
+**执行期 skill 的归属**：执行期的完整纪律（TDD、系统化调试、验证铁律、工作区隔离、分支收尾、审查往返、并行派发、写 plan、SDD 任务循环、写 skill 元技能）已拆为**独立 skill**，不在本包 references 内。入口见 `using-easymint`，索引见仓库 README「Skill 清单」。
+
+> 为什么拆出去：`description` 只写触发条件、不概述流程，才能让运行时在正确时机加载；塞进 references 会让它们失去自动触发的机会，变成「知道有但不会主动用」。本包 references 只承载**需要全文注入或跨 skill 共用的方法论**。
+
 
 ## 使用方式
 

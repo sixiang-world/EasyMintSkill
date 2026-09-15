@@ -87,3 +87,33 @@ G1 需求意图 → G2 范围（过大切 MVP）→ G3 原型（**有 UI 且中�
 - **不要在表单路径执行初始化**：收到表单结构化信息后只回复「已确认」，不读 skill、不检查环境、不写文档——初始化在项目初始化信号后才开始
 - **不要替用户决定技术选型**：技术方案给出推荐和理由，但用户确认的是「方案符合目标和预算」，不是让 AI 自行拍板
 - **不要把引导流程走成表单**：引导是对话式的，先给草案让用户改，比让用户从零描述更高效
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 这个项目一看就很简单，不用走复杂度判定
+- 用户这么着急，先做个东西出来给他看
+- 流程太重了，我自己看着办更快
+- 功能点就这么几个，不用数，直接开始写
+- 用户既然没说，我按最常见的做法来就行
+- 引导问太多会烦，先跳到出原型吧
+- 表单都填完了，说明需求已经够了，直接初始化
+- 看着玩的项目，做那么细没必要
+
+**All of these mean: 先判复杂度、再定流程，按 Gate 逐道推进。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "This project is obviously simple, no need to assess complexity" | Eyeballing is not assessment. "Making it for fun" can still be a multi-page app — judge by actual content, not vibe. |
+| "The user is in a hurry, let me just build something" | Hurry is why the flow exists. Skipping it produces rework, which is slower than the flow. |
+| "The process is too heavy for this" | Only the deliverable shrinks with complexity — the gates do not. Downgrade is a decision, not a default. |
+| "They haven't said anything, I'll pick the usual approach" | Unstated is not decided. Ask one question with a recommended default. |
+| "The form is filled in, so requirements are settled" | Form answers are raw input, not clarified intent. Clarify before routing. |
+| "Asking more questions will annoy the user" | Unanswered assumptions annoy them more. One question at a time, each with a recommendation. |
+| "I'll ask about the prototype later, after more work" | Prototype comes before docs and dev for UI projects. Later means rebuilding. |
+| "Skipping a gate this once won't matter" | The first skipped gate sets the pattern for the whole build. |
+
+> 中文说明：复杂度判定看项目实际内容（形式/功能清单/功能点数量），场景只作参考可推翻；拿不准时按高不按低。Gate 是不可跳过的检查点，跳过第一道就会跳过其余。

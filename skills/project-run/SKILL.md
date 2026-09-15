@@ -97,3 +97,33 @@ run.json 不只放「启动项目」命令——**用户日常反复使用的脚
 - **不要把简单单行命令写成脚本文件**：构建/打包/运行等一步到位的命令直接写在 run_command，不必要的脚本文件增加维护成本
 - **不要擅自删除用户运行配置**：面板内脚本可被用户编辑或删除，AI 不擅自删除——删除需确认
 - **不要把 platform 按项目技术栈硬标**：platform 按 run_command 判断（解释器+扩展名或首个命令词），不按「这是 React 项目所以标 react」
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 启动命令用户自己知道，不用写进 run.json
+- run.json 就是给我自己看的，字段写个大概就行
+- 这是 React 项目，platform 直接填 react 准没错
+- 日志没输出大概是面板的 bug，跟我脚本无关
+- label 写「dev」就行，简洁比清晰重要
+- 为静态页面起个 dev server 更规范，反正也不麻烦
+- 这个脚本我随手加的，不用问用户要不要加进配置
+- 用户配置里那个脚本看起来没用了，删掉清爽一点
+
+**All of these mean: 按 run_command 判 platform、写清 label、如实收集输出、改动用户配置前先确认。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "The user already knows how to start it" | run.json drives the one-click panel. The user asked for buttons, not for knowledge. |
+| "run.json is just for me, rough fields are fine" | It is read by the panel. Wrong fields mean broken buttons and display flicker. |
+| "It's a React project, so platform is react" | platform follows run_command (interpreter + extension or first word), not the project's framework. A `python` script in a React repo is `python`. |
+| "The log panel is empty — must be a panel bug" | Manual redirection (`> file`, `| tee`) bypasses output collection. That is the cause, and it is yours. |
+| "Short labels like 'dev' are cleaner" | A label the user cannot decode is not clean. Use action + object, e.g. `前端dev运行`. |
+| "A dev server for a static page is more standard" | A plain HTML page needs no build tool. `open index.html` is the correct answer, not a framework. |
+| "No need to ask, I'll just add my script to the config" | Long-lived scripts get added by default — and the user is told. Everything else gets asked first. |
+| "That script in their config looks dead, I'll remove it" | Their config, their call. Removal requires confirmation; never delete silently. |
+
+> 中文说明：run.json 是给用户点击的面板配置，不是内部备注——字段写错就直接体现为按钮错乱。输出靠运行时自动收集，脚本里任何重定向/后台符都会让面板空白。用户的既有配置只增不删，删除必须确认。

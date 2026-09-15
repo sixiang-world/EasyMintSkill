@@ -64,3 +64,33 @@ description: >-
 - **不要静默跳过构建失败**：安装/构建失败必须告知用户具体问题，不能假装成功继续
 - **不要在技术方案阶段讨论功能**：技术方案只定「用什么技术/怎么架构」，不重新讨论功能范围——功能已在功能共创阶段锁定
 - **不要把环境问题丢给用户**：能自动修复的依赖问题先自动修复，实在解决不了才告知用户——不把「npm install 失败」直接丢给用户
+
+## Red Flags — 出现这些念头就停下
+
+> 这些念头说明你正在给自己找借口。它们的出现本身就是信号。
+
+- 这种项目见得多了，技术栈不用查，我心里有数
+- 依赖装不装得上，开发的时候自然会知道
+- 环境就绪太耽误时间了，先落盘 task.json 开干
+- 只有一个方案明显最优，不用凑另外两个候选
+- npm install 报错是用户环境问题，让用户自己解决
+- 构建失败了先跳过，功能做完再回头修
+- 上次就是这么搭的，这次照抄就行
+- 用户看不懂技术细节，我直接定了，不用他确认
+
+**All of these mean: 三重验证出 2-3 候选方案 + 明确推荐，装依赖验构建，全部通过再落盘。**
+
+## Common Rationalizations
+
+| Excuse | Reality |
+|---|---|
+| "I've built this kind of thing before, no need to research the stack" | Ecosystem versions, deprecations, and pricing move. Verify current capability boundaries, don't recall them. |
+| "Dependency install can wait until we start coding" | Environment problems found mid-build block the build. Find them before the first task, not during it. |
+| "Environment readiness is slow, let me just write task.json" | task.json is the commit to start. Starting on an unverified environment is how the first task stalls. |
+| "One option is clearly best, the other two are padding" | Showing 2-3 with a recommendation lets the user see the tradeoff they're agreeing to. Don't hide the alternatives. |
+| "npm install failed — that's the user's environment, not mine" | You chose the stack, so you own the install. Auto-fix what you can; escalate only after trying. |
+| "Build is failing, skip it and fix later" | A build that fails now fails identically at task one. Fix it or tell the user it's blocked. |
+| "Last time this setup worked, so I'll copy it" | Last time's environment is not this one. Run the install and build again here. |
+| "The user won't understand the details, I'll just decide" | Deciding is your job, confirming is theirs. Present 2-3 options with plain-language reasons and wait. |
+
+> 中文说明：技术栈是你定的，所以依赖装不上由你负责——先自动修复，实在不行才带着具体错误让用户决定重试/跳过/手动处理。环境就绪必须发生在落盘 task.json 之前，构建失败不静默跳过也不无限重试。
