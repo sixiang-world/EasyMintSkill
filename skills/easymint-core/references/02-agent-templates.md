@@ -3,6 +3,19 @@
 > 本文件承载 Agent 模板的完整定义与管理规则。
 > **注入方式**：委派子 Agent 时，system prompt 组装公式 = 模板 prompt + `## 任务: <description>` + 详细指令 + 收尾句 + 权限段（见文末「子 Agent system prompt 组装」）。
 
+## 资源位置约定（跨 runtime 落地用）
+
+本文件与 01 文件引用的若干目录/文件由运行环境提供，路径不固定。落地时按下表任选一种：**有对应资产则用其真实路径；无则按「缺失时怎么办」一列降级**，不要照搬占位词。
+
+| 占位符 | 含义 | 缺失时怎么办 |
+|---|---|---|
+| `Agent 模板配置文件` | 存放模板定义（id/name/prompt/model 等）的 JSON 文件 | 运行时若无模板机制，直接把模板正文作为委派 prompt 前缀注入 |
+| `项目模板目录` | 存放种子 HTML 模板的目录 | 跳过模板路径，全部走「自由设计」分支（仍须遵守设计规范与自查清单） |
+| `品牌库目录` | 存放各品牌 DESIGN.md 的目录 | 跳过品牌库，改由用户口述风格或用 DESIGN_SPEC 内置色系 |
+| `项目配置文件` | 存放 platformSpec 等运行时注入项的配置 | 把 platformSpec 直接写进容器/框架的项目说明文件（如 AGENTS.md） |
+
+> 说明：`easymint-core` 本包只携带方法论，**不含上述资产**；资产由 runtime 提供。缺失时全部可按上表降级，不影响方法论完整性。
+
 ## 模板管理规则
 
 | 模板 id | 名称 | 可编辑性 |
@@ -13,14 +26,14 @@
 | `evaluator` | Evaluator | 受限：仅可改 供应商/模型/思考等级 |
 | 用户自定义 | — | 全量可编辑，可删除 |
 
-- 存储：`Agent 模板配置文件`；模板字段：id/name/description/prompt/model/provider/agentType/thinkingLevel。
+- 存储：`Agent 模板配置文件`（路径见上方「资源位置约定」）；模板字段：id/name/description/prompt/model/provider/agentType/thinkingLevel。
 - 内置模板升级同步：主 Agent 模板始终强制内置；其余内置保留用户编辑版本；已移除的默认模板 id 会被 purge。
 - 子 Agent 思考等级解析：模板配置 > 父会话等级 > medium，再按子 Agent 模型能力自适应（与主会话同一套「同等级→向下→向上」规则）。
 
 ## Builder 模板（builder）
 
 ```
-你是 AI 编程助手的 Builder Agent，负责按任务写代码。
+你是 Builder Agent，负责按任务写代码。
 
 通用行为准则、编码规范、安全约束、codegraph 使用见项目根 AGENTS.md，此处不重复。
 
@@ -55,7 +68,7 @@
 ## Evaluator 模板（evaluator）
 
 ```
-你是 AI 编程助手的 Evaluator Agent，负责验收 Builder 的工作成果。
+你是 Evaluator Agent，负责验收 Builder 的工作成果。
 
 通用行为准则、编码规范、安全约束、codegraph 使用见项目根 AGENTS.md，此处不重复。
 
@@ -90,7 +103,7 @@
 
 ### 种子模板与自由设计
 
-项目模板目录下有 4 个 HTML 模板。需求匹配模板类型时，Read 对应模板作为起点：
+项目模板目录（见上方「资源位置约定」）下有 4 个 HTML 模板。需求匹配模板类型时，Read 对应模板作为起点；目录不存在则跳过本节，全部按自由设计产出：
 
 | 模板 | 类型 | 结构 |
 |------|------|------|
@@ -105,7 +118,7 @@
 
 ### 品牌库
 
-品牌库目录下内置了 74 个品牌的 DESIGN.md（Airbnb、Stripe、Vercel、Apple、Notion、Linear、Spotify、GitHub、Figma 等），YAML frontmatter 格式，可直接解析提取 token。
+品牌库目录（见上方「资源位置约定」）下内置了 74 个品牌的 DESIGN.md（Airbnb、Stripe、Vercel、Apple、Notion、Linear、Spotify、GitHub、Figma 等），YAML frontmatter 格式，可直接解析提取 token。目录不存在时跳过敏捷取 token，直接由用户口述风格或从下方设计规范的色系中选定。
 
 用户选择品牌后，Read 对应 DESIGN.md，从 YAML frontmatter 提取：
 
@@ -157,7 +170,7 @@ accent 色每屏最多出现 2 次——CTA 按钮 + 最多一个关键元素。
 ## 设计师 Agent 模板（designer / DESIGNER_AGENT_PROMPT）
 
 ```
-你是 设计师 Agent，AI 编程助手的 UI 设计师，产出有明确设计观点、经过仔细打磨的 HTML 原型。
+你是 设计师 Agent，UI 设计师，产出有明确设计观点、经过仔细打磨的 HTML 原型。
 
 你看不到主对话历史。主 Agent 会在调度你的 prompt 里写明本次要设计的任务（产品描述、功能需求、风格方向、目标文件）。你只按任务产出原型，不向用户确认需求、不询问反馈——需求确认、预览（原型预览）与反馈循环由 主会话负责。
 
@@ -187,7 +200,7 @@ accent 色每屏最多出现 2 次——CTA 按钮 + 最多一个关键元素。
 
 ### 品牌选择
 
-如果用户在讨论风格但还没选定品牌，可以说"AI 编程助手 内置了几十个品牌的设计方案（如 Airbnb、Stripe、Apple 等），需要的话我可以列出品牌名称供你选择"。选定品牌后 Read 对应 DESIGN.md 提取 token（见上方品牌库）。
+如果用户在讨论风格但还没选定品牌，可以说"运行环境内置了几十个品牌的设计方案（如 Airbnb、Stripe、Apple 等），需要的话我可以列出品牌名称供你选择"。选定品牌后 Read 对应 DESIGN.md 提取 token（见上方品牌库）。
 
 ### 产出流程
 

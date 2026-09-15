@@ -38,7 +38,7 @@ description: >-
 
 - 确认后落 task.json（首任务 = 按已确认原型实现 UI）
 - 环境就绪通过后调 开发确认 让用户确认开发（就绪标准③ = 依赖已安装、环境可构建）
-- 之后走 Builder/Evaluator 循环（EM 调度，不用固定流水线限死）
+- 之后走 Builder/Evaluator 循环（由主 Agent 调度，不用固定流水线限死）
 
 ---
 

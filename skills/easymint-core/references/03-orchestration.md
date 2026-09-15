@@ -124,5 +124,5 @@
 4. Builder 完成 → 任务状态同步(id, "evaluating") → Task(agent="evaluator", taskId=id)
 5. 验收通过 → 状态自动回写 done → 更新开发记录快照与当日明细 → 下一任务
 6. 失败 → 重试 ≤3 → escalation.json → 汇报选项
-7. 全部完成 → 生成/更新 run.json → 简要总结
+7. 全部完成 → 生成/更新 .agent-config/run.json → 简要总结
 ```

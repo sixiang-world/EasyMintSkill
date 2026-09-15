@@ -1,6 +1,6 @@
 # 工程化机制（05）
 
-> 来源：AI 编程助手 `permission/`、`learn-gate.ts`、`tools/learn-tool.ts`、`experience-service.ts`、`skill-service.ts`、`agent-service.ts`（上下文管理）、`enhanced-*.ts`。
+> 本文件承载工程化机制：权限治理、经验自沉淀、上下文管理、系统消息协议、skill 四来源体系、增强工具模式。
 > 承载权限治理、经验自沉淀、上下文管理、系统消息协议、skill 四来源体系、增强工具模式。
 
 ## 一、权限系统（两模式 + 绝对禁区）
@@ -48,19 +48,19 @@
 - **设计要点**：门槛是**下限信号**，只决定「够不够格被评估」，不决定「值不值得沉淀」——值得与否由模型按判定标准判断（无价值静默跳过）。**判断类逻辑留给模型，代码只做下限**。
 - 每会话最多触发一次（learn-state.json 持久化，重启不重放）；工具存在性按会话创建时快照判断。
 
-### learn 工具协议
+### 经验沉淀工具协议
 
 ```
-learn(memory, context?, skill?, updateId?)
+沉淀调用（memory, context?, skill?, updateId?）
   memory: 必填。持久自包含经验：什么情况 / 做了什么 / 为什么有效
   context: 可选。来源上下文（触发场景、报错摘要）
   updateId: 可选。查重命中时更新已有经验（代替新增）
   skill: 可选。{ action: create|update, name, description, body } 同时固化为 managed skill
 ```
 
-- **挂起审阅式**：调用后广播 learn-request → 用户审阅卡片确认（可编辑 memory/skillBody）→ 确认才落盘；取消不落盘。
+- **挂起审阅式**：调用后广播审阅请求 → 用户审阅卡片确认（可编辑 memory/skillBody）→ 确认才落盘；取消不落盘。
 - **落盘原子性**：先 skill 后 memory——skill 写盘失败整体失败返回（经验不半途入库）；skill 成功但经验写盘失败返回「部分成功」。
-- **查重前置**：learn 前先用 search_experiences 查重，命中优先带 updateId 更新（合并/纠错/补全）。
+- **查重前置**：沉淀前先用经验检索工具查重，命中优先带 updateId 更新（合并/纠错/补全）。
 - **memory 三段式**：「问题 → 方案 → 验证」——先一句话场景与问题，再写做法（可执行），最后写怎么确认有效。结构化经验检索命中率更高。
 - **经验偏「知识/教训」用 memory；偏「可执行步骤」追加 skill 参数固化为工作流**。
 
@@ -78,8 +78,8 @@ learn(memory, context?, skill?, updateId?)
 
 ## 三、上下文管理（双轨压缩）
 
-- **EM 弹窗主导（60-80% 阈值）**：上下文使用率到达阈值时弹窗提示压缩，压缩过程透明可中断。
-- **SDK 自动压缩兜底**：触发点调高到 ~98%（reserveTokens 16384→4096）——只在极端情况兜底，杜绝 error 估算虚高误触发（EM 弹窗先主导）。
+- **运行时弹窗主导（60-80% 阈值）**：上下文使用率到达阈值时弹窗提示压缩，压缩过程透明可中断。
+- **SDK 自动压缩兜底**：触发点调高到 ~98%（reserveTokens 16384→4096）——只在极端情况兜底，杜绝 error 估算虚高误触发（运行时弹窗先主导）。
 - **回合内节流上报**：5s 节流广播上下文使用率——长工具回合（连续几十次工具调用）内上下文可能暴涨，只在回合结束上报会错过弹窗阈值。
 - **压缩后刷新**：compaction_end 后刷新使用率（压缩后无新回复时旧 usage 不可信，上报 0 防 UI 残留旧百分比）。
 - **系统消息走 custom 消息追加**：sendCustomMessage 前缀不变 → 缓存命中不受损；事件通知 triggerTurn: false 不经回合。
@@ -97,12 +97,14 @@ learn(memory, context?, skill?, updateId?)
 | 来源 | 位置 | 优先级/规则 |
 |---|---|---|
 | **builtin** | 应用内置 | 最高 |
-| **authored**（用户手写） | `用户 skill 目录`、项目 `.agent-config/skills/` | 同名遮蔽 builtin |
+| **authored**（用户手写） | 用户 skill 目录、项目 `.agent-config/skills/` | 同名遮蔽 builtin |
 | **imported**（外部生态发现） | `~/.claude/skills/`、`~/.codex/skills/`、项目 `.claude/skills/`、`.codex/skills/`、`.github/skills/` | 只读发现不改动原目录；同名以自带版本优先 |
-| **managed**（AI 管理区） | `AI 管理 skill 目录` | 只写此区，永不触碰用户手写区；撞 authored/builtin 同名返回 shadowed 错误且零写盘 |
+| **managed**（AI 管理区） | AI 管理 skill 目录 | 只写此区，永不触碰用户手写区；撞 authored/builtin 同名返回 shadowed 错误且零写盘 |
+
+> 「用户 skill 目录」与「AI 管理 skill 目录」由运行环境指定。落地时：前者取该 runtime 的用户级 skill 根目录，后者取其允许 AI 写入的隔离目录（须与用户手写区物理分离）。runtime 未区分二者时，可合并为同一目录但必须保留「AI 不覆盖用户已有 skill」的约束。
 
 - **skill 加载工具**：加载返回 SKILL.md 全文 + 脚本根目录 + 调用参数；frontmatter `model` 字段触发会话级模型切换（当前供应商下解析，不可用降级忽略）；成功/失败记 usageCount/failCount。
-- **manage_skill(action, name, description?, body?)**：create/update/delete 只写 AI 管理区；name 规范 `[a-z0-9][a-z0-9-]{0,63}`；body 不自带 frontmatter（系统生成）。
+- **skill 管理工具（action, name, description?, body?）**：create/update/delete 只写 AI 管理区；name 规范 `[a-z0-9][a-z0-9-]{0,63}`；body 不自带 frontmatter（系统生成）。
 - **缺描述不进会话列表**：SKILL.md 无 description 的技能不进模型可见列表（无法判断何时用，属噪声）。
 - **import_mcp_server / import_skill**：用户粘贴配置/链接即装（明确意图驱动的写入）；MCP 工具执行仍走 canUseTool 审批；导入只写配置/拷文件，不执行任何下载内容。
 

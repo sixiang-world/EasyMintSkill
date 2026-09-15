@@ -1,15 +1,15 @@
 ---
 name: easymint-core
 description: >-
-  多 Agent AI 编程方法论核心包。承载 AI 编程助手的提示词体系、Agent 模板、
+  多 Agent AI 编程方法论核心包。承载主 Agent 的提示词体系、Agent 模板、
   多 Agent 委派编排、7 Gate 创建引导、工程化机制（权限/经验沉淀/上下文管理/
   系统消息/增强工具）与文档协议。适用：需要以结构化方法论做 AI 编程编排、
   创建引导、多 Agent 协作、经验沉淀、权限治理或项目文档管理时。
 ---
 
-# AI 编程助手 Core — 多 Agent AI 编程方法论核心包
+# 多 Agent AI 编程方法论核心包
 
-本 Skill 承载一套完整的 AI 编程方法论——提示词体系、Agent 模板、多 Agent 编排、创建引导流程、工程化机制与文档协议。目标是让任何 AI 编程助手都能复现"从想法到可维护项目"的全流程工作流。
+本 Skill 承载一套完整的 AI 编程方法论——提示词体系、Agent 模板、多 Agent 编排、创建引导流程、工程化机制与文档协议。目标是让任何 AI 编程运行时都能复现"从想法到可维护项目"的全流程工作流。
 
 ## 与已安装 skill 的关系
 
@@ -24,7 +24,7 @@ description: >-
 
 | 任务场景 | 读取文件 |
 |---|---|
-| 重建/注入主 Agent 提示词（含 13 条规则全量） | `references/01-mint-system-prompt.md` |
+| 重建/注入主 Agent 提示词（含 13 条规则全量） | `references/01-main-system-prompt.md` |
 | 委派 Builder/Evaluator/设计师，或自建 Agent 模板 | `references/02-agent-templates.md` |
 | 多 Agent 编排：何时委派、task 协议、结果收集、并发与上下文保护 | `references/03-orchestration.md` |
 | 创建项目引导：7 Gate、复杂度/场景判定、技术方案、项目档案组合 | `references/04-creation-flow.md` |
