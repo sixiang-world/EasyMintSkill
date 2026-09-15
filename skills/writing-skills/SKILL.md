@@ -73,6 +73,43 @@ skills/
 
 **引用只一层深**：所有参考文件都从 SKILL.md **直接**链接。嵌套引用（SKILL.md → a.md → b.md）会让 Agent 用 `head -100` 预览而不读完整个文件，拿到不完整信息。本 skill 的三份 references 就是直接从 SKILL.md 链出的一层。
 
+## 文件组织：三种布局与选用判据
+
+上面给的是通用规则，落到具体 skill 时有三种典型形态。**先判断属于哪一种，再决定建哪些文件**——形态选错，要么该下沉的没下沉（SKILL.md 臃肿），要么不该拆的拆了（引用一层深被破坏）。
+
+### 自包含型（Self-Contained）
+
+```
+defense-in-depth/
+  SKILL.md    # 全部内容 inline
+```
+
+**何时用**：全部内容能塞进去，不需要重型参考。
+
+### 带可复用工具型（Skill with Reusable Tool）
+
+```
+condition-based-waiting/
+  SKILL.md    # 概览 + 模式
+  example.ts  # 可适配的、能跑的工具代码
+```
+
+**何时用**：那个工具是**可复用的代码**，而不只是叙述性示例。用户会想直接抄走去改。
+
+### 带重型参考型（Skill with Heavy Reference）
+
+```
+pptx/
+  SKILL.md       # 概览 + 工作流
+  pptxgenjs.md   # 600 行 API 参考
+  ooxml.md       # 500 行 XML 结构
+  scripts/       # 可执行工具
+```
+
+**何时用**：参考材料**大到不适合 inline**（几百行的 API 文档、完整语法表、数据结构说明）。
+
+> **判据一句话**：内容长度决定是否下沉（>100 行就该下沉），内容**性质**决定沉到哪——可执行代码放 `scripts/`，被查阅的文档放 `references/`，要被引用/改写的示例放 `assets/`。
+
 ## SKILL.md Structure
 
 **Frontmatter (YAML):**
