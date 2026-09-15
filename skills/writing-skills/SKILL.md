@@ -51,12 +51,6 @@ A **skill** is a reference guide for proven techniques, patterns, or tools.
 
 The entire skill creation process follows RED-GREEN-REFACTOR.
 
-## When to Create a Skill
-
-**Create when:** 技法当初对你并不显然 / 跨项目会反复查 / 适用面广（非项目专属）/ 别人也用得上。
-
-**Don't create for:** 一次性方案 / 别处已有权威文档的通用做法 / 项目专属约定（放指令文件）/ 机械性约束（**能用校验强制执行的，就自动化；文档留给需要判断的地方**）。
-
 ## Skill Types
 
 **Technique**——有步骤可循的具体方法；**Pattern**——看问题的思维方式；**Reference**——API 文档、语法指南、工具说明。
@@ -276,6 +270,8 @@ Edit skill without testing? Same violation.
 
 **Why prohibitions backfire on shaping problems:** 在"让 prompt 自包含"这类竞争性激励下，Agent 会跟 "don't X" 讨价还价。在 dispatch-prompt 指导语的**正面交锋措辞测试**中，禁令组产出的多余内容**明显多于**配方组（两组分布完全分离），甚至**比无指导的对照组还差**。所以：**微测你自己的场景，别假设；但永远不要默认去抓禁令。** 配方没有可讨价的空间——产出要么符合声明的形状，要么不符合。
 
+**每条规律背后的实测数据与完整分类判据**（几类指令、各类得分与样本量、改写前的判断顺序）见 [references/instruction-phrasing.md](references/instruction-phrasing.md)。
+
 **Rules for whichever form you pick:**
 - **No nuance clauses.** "Don't X unless it matters" 会把谈判重新打开——给一个**已经赢了的配方**追加一条 nuance 从句，就把结果从"稳定"降到"嘈杂"。真有例外，就把它写成挂在可观测谓词上的独立条件句。
 - **Exemption clauses don't scope.** "This limit doesn't apply to code blocks" 依然会压制代码块。如果产出中某部分必须豁免，**重构结构让规则够不到它**，而不是加豁免条款。
@@ -376,6 +372,8 @@ RED 就是"watch the test fail"——你必须**先看见** Agent 自然会怎�
 
 **Testing methodology:** 完整测试方法（怎么写压力场景、系统性地堵洞、元测试技巧、完整 Checklist）见 [references/testing-skills-with-subagents.md](references/testing-skills-with-subagents.md)。
 
+**现成的攻击语料：** 如果被测的是**强制触发层**这类"必须抢在动作之前生效"的技能，上面七类压力还缺一种最关键的——**用户主动诱导你跳过流程**。9 个攻击 prompt（裸命名、礼貌点名、时间压力、伪造"流程已完成"、伪官方推荐……）＋ "触发 + 顺序"两层判定思路，见 [references/trigger-test-prompts.md](references/trigger-test-prompts.md)。核心判据：**技能调用之前出现任何动手类工具调用，即失败**——提前动手 = 流程已被绕过。
+
 ## Flowchart Usage
 
 ```
@@ -390,7 +388,18 @@ RED 就是"watch the test fail"——你必须**先看见** Agent 自然会怎�
 
 **Never use flowcharts for:** Reference material → Tables, lists · Code examples → Markdown blocks · Linear instructions → Numbered lists · Labels without semantic meaning (step1, helper2)
 
-**渲染支持**：流程图用 graphviz dot 语法写。样式规则见 [graphviz-conventions.dot](graphviz-conventions.dot)。若当前环境**没有装 graphviz**，先判断这张图是否真的必要——非显然的决策点才值得一张图；仅仅为"好看"加的图，直接删掉换成表格更省 token。
+**渲染支持**：流程图用 graphviz dot 语法写。样式规则见 [graphviz-conventions.dot](graphviz-conventions.dot)。
+
+**渲染成 SVG 给用户看**：用本目录的 `render-graphs.js` 把一个技能里的流程图渲染成 SVG：
+
+```bash
+./render-graphs.js ../some-skill            # 每张图单独输出
+./render-graphs.js ../some-skill --combine  # 所有图合并成一张 SVG
+```
+
+它扫描 SKILL.md 里的 dot 代码块，调 `dot` 转 SVG，输出到 `diagrams/`。脚本在缺失 graphviz 时会给出安装提示并优雅失败（已为 Windows 适配，不依赖 `which`）。
+
+**先判断这张图是否真的必要**——非显然的决策点才值得一张图。仅仅为"好看"加的图，直接删掉换成表格更省 token。图本身要看，但**不要为了看图而画图**。
 
 ## Code Examples
 

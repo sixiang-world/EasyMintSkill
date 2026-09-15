@@ -81,7 +81,7 @@ async function waitFor<T>(
 }
 ```
 
-带领域专用辅助函数的完整实现（`waitForEvent`、`waitForEventCount`、`waitForEventMatch`）见 [assets/condition-based-waiting-example.ts](assets/condition-based-waiting-example.ts)，取自一次真实调试。
+带领域专用辅助函数的完整实现（`waitForEvent`、`waitForEventCount`、`waitForEventMatch`）见 [assets/condition-based-waiting-example.ts](../assets/condition-based-waiting-example.ts)，取自一次真实调试。
 
 ## Common Mistakes
 

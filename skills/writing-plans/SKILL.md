@@ -174,7 +174,7 @@ git commit -m "feat: add specific feature"
 
 **"计划已完成，保存到 `.agentskill/plans/<filename>.md`。两种执行方式：**
 
-**1. Subagent-Driven（推荐）** - 每个任务派一个全新子 Agent，任务之间做 review，迭代快
+**1. Subagent-Driven（推荐）** - 每个任务派一个全新子 Agent，**每个任务做两阶段 review（规格符合性 + 代码质量）**，迭代快
 
 **2. Inline Execution** - 在本会话内用 executing-plans 执行任务，批量执行
 
@@ -185,6 +185,8 @@ git commit -m "feat: add specific feature"
 
 **如果选了 Inline Execution：**
 - **REQUIRED SUB-SKILL:** 使用 `executing-plans`
+
+**这两个方案不是平级的**：Subagent-Driven 有独立审查者、有审查门；Inline 没有（它把审查责任交给了计划本身的完备性）。推荐前者是因为**独立审查的价值无法用"计划写得更细"来替代**。
 
 ## 与其他 skill 的关系
 

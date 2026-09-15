@@ -231,7 +231,7 @@ If you catch yourself thinking:
 
 **ALL of these mean: STOP. Return to Phase 1.**
 
-**If 3+ fixes failed:** Question the architecture (see Phase 4.5)
+**If 3+ fixes failed:** Question the architecture (see Phase 4 第 5 条「If 3+ Fixes Failed: Question Architecture」)
 
 > 以上任何一条出现，含义都是：停下，回到 Phase 1。已经失败 3 次以上，去质疑架构，不要再试。
 
@@ -293,12 +293,22 @@ If you catch yourself thinking:
 - **[references/defense-in-depth.md](references/defense-in-depth.md)** —— 找到根因之后，在多层加校验
 - **[references/condition-based-waiting.md](references/condition-based-waiting.md)** —— 用条件轮询替换随意的时间等待
 
+## 维护者注意：技能有效性验证用例
+
+`tests/` 目录下有这个技能的**压力测试用例**（时间压力 / 沉没成本 / 权威服从三种情境）。
+
+**它们不参与运行时** —— 你执行调试任务时不需要读它们。它们的用途是：**当你改写这个技能之后，验证它是否还扛得住压力**。
+
+之所以要单独强调：一个纪律型技能的价值不在于"读起来有道理"，而在于**在压力下仍被遵守**。删掉这组用例，等于放弃了唯一能发现"改写把抗压性弄丢了"的手段。
+
+详见 **[tests/README.md](tests/README.md)**。
+
 ## 与其他 skill 的关系
 
 | 情境 | 转入 |
 |---|---|
 | 定位到根因，要修根因 | `test-driven-development`——先写复现测试，再写最小修复 |
-| 修复完成，要声称"修好了" | `verification-before-completion`——**强制**，本 skill 的 Phase 4.3 已经要求它 |
+| 修复完成，要声称"修好了" | `verification-before-completion`——**强制**，本 skill 的 Phase 4 第 3 条「Verify Fix」已经要求它 |
 | 3 次以上修复都失败，怀疑架构 | 停下，先和用户讨论架构；不要在本 skill 里继续试第 4 次 |
 | 修复本身需要动较大的设计 | `ponytail`——判断是不是过度设计；必要时回到设计阶段对应 skill |
 | 修完想审一遍代码质量 | `ponytail-review` |

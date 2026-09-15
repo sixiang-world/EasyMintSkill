@@ -191,7 +191,7 @@ Skip any step = lying, not verifying
 | 情境 | 转入 |
 |---|---|
 | 准备声称"修好了""测试过了""可以提交了" | **本 skill（强制）**——先跑验证命令，再开口 |
-| 定位到根因、开始动手修 | `systematic-debugging`——本 skill 是它的 Phase 4.3 收口 |
+| 定位到根因、开始动手修 | `systematic-debugging`——本 skill 是它 Phase 4 第 3 条「Verify Fix」的收口 |
 | 正在写实现、还没写完 | `test-driven-development`——本 skill 不是它的替代品，是它的出口检查 |
 | 验证通过，要决定怎么合入 | `finishing-a-development-branch`——其 Step 1 的绿测基线就是本 skill 的产出 |
 | 需要独立判断改动是否真发生了 | 看版本控制 diff（`git diff` / `git status` / `git log`） |

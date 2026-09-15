@@ -77,13 +77,23 @@
 | `dispatching-parallel-agents` | 同名 skill |
 | `writing-plans` / `executing-plans` | 同名 skill |
 | `subagent-driven-development`（两阶段 review / ledger / breaker / 三个 prompt 模板 / 三个脚本） | 同名 skill 及附属文件 |
-| `writing-skills`（含三份 references 与 graphviz 约定） | 同名 skill 及同名 references |
+| `writing-skills`（含五份 references 与 graphviz 约定） | 同名 skill 及同名 references |
+| `writing-skills/references/instruction-phrasing.md` | `docs/superpowers/specs/2026-06-10-positive-instruction-redesign-design.md`（实测数据与五类指令分类） |
+| `writing-skills/references/trigger-test-prompts.md` | `tests/explicit-skill-requests/`（9 个触发攻击 prompt + "触发 + 顺序"两层判定） |
+| `writing-skills/references/testing-campaign-example.md` | `CLAUDE_MD_TESTING.md`（指令措辞 A/B 测试战役实例） |
+| `writing-skills/render-graphs.js` | 同名脚本（graphviz 渲染） |
 | `easymint-core` 的 Evaluator 两阶段升级、fix loop、Rulings not stalls | `subagent-driven-development` + `writing-skills` |
 | 各 skill 的 `Red Flags` 与 `Common Rationalizations` 表 | 上述各 skill 的同名段落 |
 
 ### 改编说明
 
 本包的改编包括：正文改写为中文（`Red Flags` / `Common Rationalizations` 表与 prompt 模板保留英文原文，因这些措辞的心理阻断效果依赖原文）；去除平台专属内容（原项目的多 harness 适配层、特定运行时的工具名与配置路径）；项目状态目录统一为本包约定的 `.agentskill/`。
+
+三份源自 Superpowers 的测试与实测参考（`instruction-phrasing.md` / `trigger-test-prompts.md` / `testing-campaign-example.md`）另做了以下改编：
+
+- **`instruction-phrasing.md`**：忠实转述实测数据与五类指令分类，未改动任何数值；仅移除其中的具体产品名与模型名（如原文"Codex re-reads SKILL.md ~500× per session"里的产品名改为"长会话中"）。
+- **`trigger-test-prompts.md`**：**只吸收攻击角度与判定思路，不迁移原版的平台专属 runner 调用方式**。9 段攻击语料逐字保留（翻译会削弱其作为测试素材的诱导力）；其中的原版产品名已在正文与投喂 payload 中替换为中立表述。
+- **`testing-campaign-example.md`**：被测对象所在的常驻指令文件名与技能库目录路径统一抽象为 `<INSTRUCTIONS_FILE>` / `<SKILLS_DIR>` 占位符（因不同运行时的叫法与路径各不相同）；四个压力场景、五个措辞变体、四步协议、镜像判据与结论全部保留，未做删减。
 
 `kickoff` 的 Visual Companion 服务端脚本另做了以下改编：
 

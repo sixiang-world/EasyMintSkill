@@ -107,7 +107,7 @@ npm test 2>&1 | grep 'DEBUG git init'
 
 如果测试过程中出现了不该有的文件/状态，但不知道是哪个测试干的：
 
-用二分脚本 [scripts/find-polluter.sh](scripts/find-polluter.sh)：
+用二分脚本 [scripts/find-polluter.sh](../scripts/find-polluter.sh)：
 
 ```bash
 ./find-polluter.sh '.git' 'src/**/*.test.ts'

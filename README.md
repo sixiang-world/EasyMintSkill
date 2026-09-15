@@ -16,6 +16,32 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 - **质量守护**：Ponytail 反过度工程三兄弟（主规则 / Code Review / 全仓审计）
 - **随包设计资产**：74 个品牌设计规范库（可直接解析取 token）+ 4 个单文件 HTML 起步模板
 
+## ⚠️ 前提声明：技能不自动触发
+
+**这一节请你务必读。** 它决定了这套技能包在你的环境里是否真的生效。
+
+本包是**平台中立**的，不绑定任何特定运行时 —— 这是设计选择，但有代价：
+
+> **技能文件本身是惰性的。** `SKILL.md` 放在磁盘上，不会自己生效。
+> 入口层 `using-easymint`（先查 skill）和 `kickoff`（创作前先分类与拿批准）
+> 的存在意义就是**强制触发** —— 但它们自己也需要被触发。
+
+| 你的宿主平台 | 入口技能能否自动触发 | 你需要做什么 |
+|---|---|---|
+| 具备 skill 自动发现/加载能力（多数现代 Agent 运行时） | ✅ 能 | 什么都不用做 |
+| 只能在用户**显式点名**时才加载 skill | ⚠️ **不能** | 接入 [`integrations/`](integrations/README.md)，或每次会话开头手工引导 |
+| 没有 skill 机制，只有系统提示词 | ⚠️ **不能** | 把入口规则写进系统提示词，可参考 [`integrations/README.md`](integrations/README.md) 第一节 |
+
+**后两种情况下，"两层强制触发"会退化成"建议"。** 我们选择如实告知，而不是假装触发一定会发生。
+
+三个应对选项，按推荐度排序：
+
+1. **接入可选注入器** —— [`integrations/session-start`](integrations/README.md) 在会话启动时把入口技能全文注入上下文，平台中立、不猜环境
+2. **手工引导** —— 新会话开头说一句「先读 `using-easymint`，然后再回应我」
+3. **写进系统提示词** —— 把 `skills/using-easymint/SKILL.md` 的内容作为规则前置
+
+> 若你发现 Agent 没走流程直接动手，可以直接提醒它先查 skill。
+
 ## Skill 清单（27 个）
 
 ### 入口层（两层）
@@ -154,6 +180,17 @@ cp -r EasyMintSkill/skills/* <你的 runtime 的 skills 目录>/
 ```
 
 各 runtime 的 skills 根目录不同（例如部分工具用 `~/.claude/skills/`，部分用 `~/.codex/skills/`），请按所用工具的实际约定放置。注意 `easymint-core` 自带 `assets/` 子目录，复制时需**整目录递归复制**，否则品牌库与模板会丢失。
+
+### 让入口技能自动生效（可选但推荐）
+
+如果你的 runtime **不能自动发现并加载 skill**，上面的复制完成后入口层不会生效。可选接入注入器：
+
+```bash
+# 在会话启动事件里调用（字段名以你的平台文档为准）
+bash <包路径>/integrations/session-start --format <nested|snake|sdk> --skills-dir <包路径>
+```
+
+详见 **[`integrations/README.md`](integrations/README.md)** —— 含三种输出形状说明、三种接入方式、以及写自己的注入器时必须遵守的 5 条硬约束。
 
 ## 随包设计资产
 
@@ -307,6 +344,10 @@ skills/
 │   ├── visual-companion.md  # 可视化伴侣指南（kickoff 专用）
 │   ├── scenarios.md      # 场景配置（creation-guide 专用）
 │   └── cost-map.md       # 成本映射表（creation-guide 专用）
+
+integrations/             # 可选：宿主平台接入层
+├── README.md             # 前提声明 + 三种接入方式 + 注入器硬约束
+└── session-start         # 会话启动时注入入口技能（平台中立）
 ```
 
 ## 验证与测试

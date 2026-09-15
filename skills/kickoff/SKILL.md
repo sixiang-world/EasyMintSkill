@@ -10,11 +10,14 @@ description: "You MUST use this before any creative work - new features, new pro
 **开始前先分类**：判断这件事需要多少流程仪式感，说出你的判定，然后按对应路径推进：理解上下文 → 澄清想法 → 呈现设计 → 拿到用户批准。
 
 <HARD-GATE>
-在你告诉用户你打算做什么、并且他们明确批准之前，
-**禁止**调用任何实现类技能、禁止写任何代码、禁止搭建任何项目骨架、禁止采取任何实现动作。
-
-这条规矩适用于下面每一条路径上的每一个任务 —— **仪式的分量随任务缩放，批准闸门永不缩放。**
+Do NOT invoke any implementation skill, write any code, scaffold any
+project, or take any implementation action until you have told your
+human partner what you intend and they have approved it. This applies
+to EVERY task on EVERY path below — the ceremony scales with the task;
+the approval gate never does.
 </HARD-GATE>
+
+**译**：在你告诉用户你打算做什么、并且他们明确批准之前，禁止调用任何实现类技能、禁止写任何代码、禁止搭建任何项目骨架、禁止采取任何实现动作。这条规矩适用于下面**每一条路径上的每一个任务** —— **仪式的分量随任务缩放，批准闸门永不缩放。**
 
 ## 为什么这一层必须存在
 
@@ -61,6 +64,8 @@ description: "You MUST use this before any creative work - new features, new pro
 | "探针能跑，那这段代码我就留下了" | Spike 的产出是**答案**。留下代码是一个**新请求** —— 重新分类。 |
 | "它变大了，但我快做完了，不用重新分类" | 隐藏复杂度会中途升级路径。停下来，说出来。 |
 | "他们批准了探针，所以后续改动也一并批准了" | **每个任务有它自己的分类和它自己的批准。** |
+| "我自己审完规格了，就不用再派子 Agent 了吧" | 你刚写完它，看不见自己的盲区。**自审和独立评审是两道，不是一道的两种说法。** |
+| "规格模板评审那一步可以省，省时间" | 一份坏规格会污染后面所有计划与任务。这是**最便宜的一次拦截点**，省它是最贵的省法。 |
 
 ## 检查清单
 
@@ -90,9 +95,21 @@ description: "You MUST use this before any creative work - new features, new pro
 4. **提出 2-3 种方案** —— 给出取舍和你的推荐
 5. **分节呈现设计** —— 每节复杂度决定篇幅，**每节后都问用户是否认可**
 6. **写设计文档** —— 存到 `docs/specs/YYYY-MM-DD-<topic>-design.md` 并提交
-7. **规格自审** —— 快速内联检查占位符、自相矛盾、歧义、范围（见下）
-8. **用户评审规格** —— 请用户过一遍规格文件再往下走
-9. **转入实现** —— 调用 `writing-plans` 生成实现计划
+7. **规格自审（第一道）** —— 快速内联检查占位符、自相矛盾、歧义、范围（见下）
+8. **派发规格评审子 Agent（第二道）** —— 用 `spec-document-reviewer-prompt.md` 模板派一个**独立**子 Agent 审规格。它做五维检查：完整性 / 一致性 / 清晰度 / 范围 / YAGNI
+9. **用户评审规格** —— 请用户过一遍规格文件再往下走
+10. **转入实现** —— 调用 `writing-plans` 生成实现计划
+
+<HARD-GATE>
+The two spec checks are NOT one check. The self-review is written by the
+author, who still holds the mental model that produced the spec and is
+blind to its own gaps. The subagent review is written by a fresh reader
+who only asks "can this be planned from?". Same artifact, different
+time, different author, different judgment — collapsing them is grading
+your own exam.
+</HARD-GATE>
+
+**译**：两道规格检查**不能合并成一道**。自审是**你**跑的——你刚写完，带着写完它的思路，看不见自己的盲区；独立评审是**没有你上下文包袱的读者**跑的——它只问「这份规格能不能直接拿去规划」。同一个产物，**时间点不同、主体不同、判据不同**。合并两者，等于让出题人自己判卷。
 
 ## 流程全图
 
@@ -116,14 +133,22 @@ description: "You MUST use this before any creative work - new features, new pro
           │是                      │是                          │是
           ▼                        ▼                            ▼
 ┌───────────────────┐    ┌──────────────────────┐    ┌────────────────────────┐
-│ 调查 → 给建议     │    │ 直接实现              │    │ 写设计文档 → 规格自审  │
-│ 产物标注为弃用    │    │ （TDD 照常，无计划文档）│   │ → 用户评审规格         │
-└───────────────────┘    └──────────────────────┘    └───────────┬────────────┘
-                                                                  │批准
-                                                                  ▼
-                                                      ┌────────────────────────┐
-                                                      │ 调用 writing-plans     │
-                                                      └────────────────────────┘
+│ 调查 → 给建议     │    │ 直接实现              │    │ 写设计文档             │
+│ 产物标注为弃用    │    │ （TDD 照常，无计划文档）│   │  → ① 规格自审（自己）  │
+└───────────────────┘    └──────────────────────┘    │  → ② 派子 Agent 评审   │
+                                                      └───────────┬────────────┘
+                                                                  │ ②报 Issues？
+                                                     ┌────────────┴────────────┐
+                                                     │是                        │否（Approved）
+                                                     ▼                          ▼
+                                          ┌────────────────────┐    ┌──────────────────┐
+                                          │ 修 → 重跑第②道     │    │ 用户评审规格     │
+                                          └────────────────────┘    └────────┬─────────┘
+                                                                             │批准
+                                                                             ▼
+                                                                 ┌────────────────────────┐
+                                                                 │ 调用 writing-plans     │
+                                                                 └────────────────────────┘
 
                 ┌──────────────────────────────────────────┐
                 │ 中途发现隐藏复杂度 → 单向升级路径         │
@@ -182,7 +207,7 @@ description: "You MUST use this before any creative work - new features, new pro
 - 如果可用，使用 `dev-docs` 技能保证写作清晰简洁
 - **把设计文档提交到 git**
 
-**规格自审：**
+**第一道：规格自审（你自己跑）：**
 
 写完规格后，用新鲜的眼光看它：
 
@@ -191,15 +216,35 @@ description: "You MUST use this before any creative work - new features, new pro
 3. **范围检查** —— 它聚焦到可以用**单个**实现计划覆盖吗，还是需要拆解？
 4. **歧义检查** —— 有没有哪条需求能被解读成两种意思？如果有，**选一种并写明确**。
 
-发现问题**就地修掉**。不需要再走一轮评审 —— 修完继续走。
+发现问题**就地修掉**。不需要再走一轮 —— 修完继续走下一道。
+
+**第二道：派发规格评审子 Agent（独立跑）：**
+
+自审修完之后，**派一个独立子 Agent** 审这份规格。模板见 `spec-document-reviewer-prompt.md`，按其格式填充后派发。
+
+它做五维检查，判据与你自审的四项**不完全重叠**：
+
+| 维度 | 查什么 |
+|---|---|
+| 完整性 | TODO、占位符、"TBD"、未完成章节 |
+| 一致性 | 内部矛盾、互相冲突的需求 |
+| 清晰度 | 歧义到足以让人建错东西的需求 |
+| 范围 | 是否聚焦到可用**单个**计划覆盖，还是在覆盖多个独立子系统 |
+| YAGNI | 未被要求的功能、过度设计 |
+
+它返回 `Status: Approved | Issues Found` + 问题清单 + 建议。
+
+**校准（重要）**：它只应报告**会导致规划阶段真实问题**的缺陷 —— 缺章节、自相矛盾、歧义到可有两种解读。措辞的润色偏好、"某节不如别节详细"**不算问题**。所以它给出的 `Recommendations` 是**咨询性的，不阻断批准**。
+
+**如果它报了 Issues**：修掉，然后**重跑这一道**（而不是重跑整个流程）。只有拿到 `Approved` 才进用户评审闸门。
 
 **用户评审闸门：**
 
-自审通过后，请用户在继续之前评审写好的规格：
+两道检查都通过后，请用户在继续之前评审写好的规格：
 
 > "规格已经写好并提交到 `<路径>`。请过一遍，如果在我们开始写实现计划之前有任何想改的，告诉我。"
 
-**等用户回应。** 如果他们要求修改，改完重跑自审循环。**只有用户批准后才继续。**
+**等用户回应。** 如果他们要求修改，改完重跑上述检查循环。**只有用户批准后才继续。**
 
 **转入实现：**
 
