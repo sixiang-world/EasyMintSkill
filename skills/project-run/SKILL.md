@@ -3,12 +3,12 @@ name: project-run
 description: >-
   运行配置。用户问「怎么启动项目」「加个运行方式」「新增/修改运行命令」、
   写常用脚本（运行/构建/打包/安装/发版部署等），或项目完成需要生成运行配置时使用。
-  提供 .agent-config/run.json 的完整格式规范。
+  提供 .agentskill/run.json 的完整格式规范。
 ---
 
 # Project Run — 运行配置
 
-`.agent-config/run.json` 由运行配置面板读取，每条 commands 显示为一个可一键启动/停止的按钮（含端口状态）。文件变化时配置自动刷新。
+`.agentskill/run.json` 由运行配置面板读取，每条 commands 显示为一个可一键启动/停止的按钮（含端口状态）。文件变化时配置自动刷新。
 
 ## 格式
 

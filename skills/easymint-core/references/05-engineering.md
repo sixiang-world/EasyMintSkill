@@ -97,8 +97,8 @@
 | 来源 | 位置 | 优先级/规则 |
 |---|---|---|
 | **builtin** | 应用内置 | 最高 |
-| **authored**（用户手写） | 用户 skill 目录、项目 `.agent-config/skills/` | 同名遮蔽 builtin |
-| **imported**（外部生态发现） | `~/.claude/skills/`、`~/.codex/skills/`、项目 `.claude/skills/`、`.codex/skills/`、`.github/skills/` | 只读发现不改动原目录；同名以自带版本优先 |
+| **authored**（用户手写） | 用户 skill 目录、项目 `.agentskill/skills/` | 同名遮蔽 builtin |
+| **imported**（外部生态发现） | 各 AI 运行时的既有 skill 目录（如 `~/.claude/skills/`、`~/.codex/skills/`、项目 `.claude/skills/`、`.codex/skills/`、`.github/skills/`） | 只读发现不改动原目录；同名以自带版本优先。落地时按实际存在的生态目录枚举，不限定具体清单 |
 | **managed**（AI 管理区） | AI 管理 skill 目录 | 只写此区，永不触碰用户手写区；撞 authored/builtin 同名返回 shadowed 错误且零写盘 |
 
 > 「用户 skill 目录」与「AI 管理 skill 目录」由运行环境指定。落地时：前者取该 runtime 的用户级 skill 根目录，后者取其允许 AI 写入的隔离目录（须与用户手写区物理分离）。runtime 未区分二者时，可合并为同一目录但必须保留「AI 不覆盖用户已有 skill」的约束。

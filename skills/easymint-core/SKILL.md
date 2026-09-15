@@ -36,7 +36,19 @@ description: >-
 1. **按需加载**：先读本文件确定能力域，再 Read 对应 references 文件全文，不一次全读。
 2. **注入式使用**：需要"让某个 Agent 变成项目经理+架构师角色"时，把 `01` 文件全文作为其 system prompt 主体；需要"变成 Builder/Evaluator/设计师"时用 `02` 文件对应模板。
 3. **编排式使用**：需要复现多 Agent 开发循环时，按 `03` 的委派协议 + `04` 的创建流程 + `06` 的产物协议执行，工具映射见下文"适配层"。
-4. **沉淀式使用**：需要经验自沉淀体系时，按 `05` 的 learn-gate 门槛与 learn 协议实现。
+4. **沉淀式使用**：需要经验自沉淀体系时，按 `05` 的沉淀门槛与审阅协议实现。
+
+## 随包资产（assets/）
+
+本包自带设计资产，无需外部运行环境提供：
+
+| 路径 | 内容 | 用途 |
+|---|---|---|
+| `assets/templates/` | 4 个单文件 HTML 模板（landing / dashboard / form / detail） | 原型阶段的起步骨架，共享一套 `:root` CSS 变量 |
+| `assets/brand-tokens/` | 74 个品牌的 `DESIGN.md`（YAML frontmatter，可直接解析取 token） | 用户指名品牌风格时提取配色/排版/圆角/间距 token |
+| `assets/THIRD_PARTY_NOTICES.md` | 来源、许可与使用限制 | 使用品牌库前必读 |
+
+资产只在原型/设计阶段按需 `Read`，不预先全部载入上下文。三类可变状态（run.json、escalation.json、项目级 skill）落在项目根的 `.agentskill/` 约定目录，详见 `02` 文件「资源位置约定」。
 
 ## 适配层（平台工具映射）
 

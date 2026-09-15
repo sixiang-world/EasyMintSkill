@@ -5,16 +5,34 @@
 
 ## 资源位置约定（跨 runtime 落地用）
 
-本文件与 01 文件引用的若干目录/文件由运行环境提供，路径不固定。落地时按下表任选一种：**有对应资产则用其真实路径；无则按「缺失时怎么办」一列降级**，不要照搬占位词。
+本包自带全部设计资产，并约定一套**运行时目录**存放可变状态。两类位置分开看：
 
-| 占位符 | 含义 | 缺失时怎么办 |
+### A. 本包自带资产（随 skill 分发，只读）
+
+| 资产 | 包内路径 | 内容 |
 |---|---|---|
-| `Agent 模板配置文件` | 存放模板定义（id/name/prompt/model 等）的 JSON 文件 | 运行时若无模板机制，直接把模板正文作为委派 prompt 前缀注入 |
-| `项目模板目录` | 存放种子 HTML 模板的目录 | 跳过模板路径，全部走「自由设计」分支（仍须遵守设计规范与自查清单） |
-| `品牌库目录` | 存放各品牌 DESIGN.md 的目录 | 跳过品牌库，改由用户口述风格或用 DESIGN_SPEC 内置色系 |
-| `项目配置文件` | 存放 platformSpec 等运行时注入项的配置 | 把 platformSpec 直接写进容器/框架的项目说明文件（如 AGENTS.md） |
+| 种子 HTML 模板 | `assets/templates/` | 4 个模板：`landing.html` / `dashboard.html` / `form.html` / `detail.html` |
+| 品牌设计规范库 | `assets/brand-tokens/` | 74 个品牌目录，各含 `DESIGN.md`（YAML frontmatter 格式，可直接解析取 token） |
+| 第三方来源声明 | `assets/THIRD_PARTY_NOTICES.md` | 品牌库与模板的来源、许可与免责说明 |
 
-> 说明：`easymint-core` 本包只携带方法论，**不含上述资产**；资产由 runtime 提供。缺失时全部可按上表降级，不影响方法论完整性。
+运行时**不需要**把上述资产复制到项目里也能工作：直接用 Read 读包内路径即可。若运行时希望项目自包含（离线可用、便于迁移），可把 `assets/templates/` 与 `assets/brand-tokens/` 拷进项目目录，路径由运行时自定。
+
+### B. 运行时目录（由落地环境指定，存放可变状态）
+
+路径不固定，下表给出**约定值**与**缺失时的降级方式**。约定值统一放在项目根的 `.agentskill/` 下；运行时若已有自己的约定目录（如 `.xxx/`），整套替换即可，不必照搬。
+
+| 约定路径 | 含义 | 缺失时怎么办 |
+|---|---|---|
+| `<项目根>/.agentskill/run.json` | 运行面板的脚本配置（一键运行/停止，含端口） | 无运行面板机制时，改写成项目 README 的「启动方式」章节 |
+| `<项目根>/.agentskill/escalation.json` | 委派受阻的升级记录 | 无文件系统写入权时，把升级信息直接写进委派结果正文回报 |
+| `<项目根>/.agentskill/skills/` | 项目级 skill（authored 来源） | 跳过项目级，仅用用户级与内置 |
+| `<项目根>/.agentskill/project-profile.json` | 项目档案（platformSpec 等注入项） | 把 platformSpec 直接写进项目说明文件（如 `AGENTS.md`）的对应小节 |
+| `<用户配置根>/agent-templates.json` | Agent 模板定义（id/name/prompt/model 等） | 运行时若无模板机制，直接把模板正文作为委派 prompt 前缀注入 |
+| `<用户配置根>/skills/` | 用户级 skill（authored 来源） | 仅用项目级与内置 |
+| `<用户配置根>/managed-skills/` | AI 管理区（managed 来源） | 落进用户级目录，但须保留「AI 不覆盖用户已有 skill」的约束 |
+
+> `<项目根>` 指当前工作项目的根目录；`<用户配置根>` 指该 runtime 存放用户级配置的根目录，随环境而异，不要假定为某个固定路径。
+> **降级原则**：上表任一项缺失都不影响方法论完整性——协议是纯文件的，缺哪个按右列降级即可。
 
 ## 模板管理规则
 
@@ -26,7 +44,7 @@
 | `evaluator` | Evaluator | 受限：仅可改 供应商/模型/思考等级 |
 | 用户自定义 | — | 全量可编辑，可删除 |
 
-- 存储：`Agent 模板配置文件`（路径见上方「资源位置约定」）；模板字段：id/name/description/prompt/model/provider/agentType/thinkingLevel。
+- 存储：`agent-templates.json`（路径见上方「资源位置约定」B 表）；模板字段：id/name/description/prompt/model/provider/agentType/thinkingLevel。
 - 内置模板升级同步：主 Agent 模板始终强制内置；其余内置保留用户编辑版本；已移除的默认模板 id 会被 purge。
 - 子 Agent 思考等级解析：模板配置 > 父会话等级 > medium，再按子 Agent 模型能力自适应（与主会话同一套「同等级→向下→向上」规则）。
 
@@ -103,14 +121,14 @@
 
 ### 种子模板与自由设计
 
-项目模板目录（见上方「资源位置约定」）下有 4 个 HTML 模板。需求匹配模板类型时，Read 对应模板作为起点；目录不存在则跳过本节，全部按自由设计产出：
+本包 `assets/templates/`（见上方「资源位置约定」A 表）下有 4 个 HTML 模板。需求匹配模板类型时，Read 对应模板作为起点；读取不到则跳过本节，全部按自由设计产出：
 
 | 模板 | 类型 | 结构 |
 |------|------|------|
-| template-landing.html | 落地页 | nav → hero → features(3-card) → stats → CTA → footer |
-| template-dashboard.html | 后台配置面板 | sidebar + header → stats-row → table + activity |
-| template-form.html | 表单页 | 标题 → 表单字段(含 error/disabled 态) → 提交 |
-| template-detail.html | 详情页 | 返回导航 → 媒体区 → 详情 → 侧栏操作卡片 |
+| landing.html | 落地页 | nav → hero → features(3-card) → stats → CTA → footer |
+| dashboard.html | 后台配置面板 | sidebar + header → stats-row → table + activity |
+| form.html | 表单页 | 标题 → 表单字段(含 error/disabled 态) → 提交 |
+| detail.html | 详情页 | 返回导航 → 媒体区 → 详情 → 侧栏操作卡片 |
 
 **模板覆盖不到的场景（聊天/IM、内容阅读、电商交易、个人展示、状态页等）不要硬套模板——自由发挥从零设计**，但必须达到与模板同等的质量与质感：遵循下方设计规范、完成全部自查清单。
 
@@ -118,7 +136,7 @@
 
 ### 品牌库
 
-品牌库目录（见上方「资源位置约定」）下内置了 74 个品牌的 DESIGN.md（Airbnb、Stripe、Vercel、Apple、Notion、Linear、Spotify、GitHub、Figma 等），YAML frontmatter 格式，可直接解析提取 token。目录不存在时跳过敏捷取 token，直接由用户口述风格或从下方设计规范的色系中选定。
+本包 `assets/brand-tokens/`（见上方「资源位置约定」A 表）下内置了 74 个品牌的 DESIGN.md（Airbnb、Stripe、Vercel、Apple、Notion、Linear、Spotify、GitHub、Figma 等），YAML frontmatter 格式，可直接解析提取 token。读取不到时跳过敏捷取 token，直接由用户口述风格或从下方设计规范的色系中选定。
 
 用户选择品牌后，Read 对应 DESIGN.md，从 YAML frontmatter 提取：
 

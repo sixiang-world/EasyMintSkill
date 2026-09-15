@@ -57,9 +57,9 @@
 
 评估影响 → 已完成保留、受影响更新、新增追加末尾 → 刷新任务列表 → 继续 Builder/Evaluator 循环。项目从 done 回到 developing 是常态。变更重大时先告知用户。
 
-## 三、运行配置（.agent-config/run.json）
+## 三、运行配置（.agentskill/run.json）
 
-`.agent-config/run.json` 由运行配置读取，每条 commands 显示为一个可一键启动/停止的按钮（含端口状态）。文件变化时配置自动刷新。
+`.agentskill/run.json` 由运行配置读取，每条 commands 显示为一个可一键启动/停止的按钮（含端口状态）。文件变化时配置自动刷新。
 
 - 生成时机：项目完成时、用户问「怎么启动/加运行命令」、写常用脚本（运行/构建/打包/安装/发版部署等）
 - 格式细节见已安装的 project-run skill（SKILL.md 提供完整格式规范）

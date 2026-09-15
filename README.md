@@ -14,12 +14,13 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 - **7 Gate 创建引导**：意图采集 → 功能共创 → 成本校验 → 快速原型 → 技术方案 → 开发 → 验证
 - **工程化规范**：文档四层协议、task.json 任务管理、run.json 运行配置、任务状态同步
 - **质量守护**：Ponytail 反过度工程三兄弟（主规则 / Code Review / 全仓审计）
+- **随包设计资产**：74 个品牌设计规范库（可直接解析取 token）+ 4 个单文件 HTML 起步模板
 
 ## Skill 清单
 
 | 分类 | Skill | 用途 |
 |---|---|---|
-| **核心** | `easymint-core` | 方法论核心包：主 Agent 系统提示词 + 13 条规则 + 4 Agent 模板 + 多 Agent 编排 + 7 Gate 流程 + 工程化机制 + 文档协议 |
+| **核心** | `easymint-core` | 方法论核心包：主 Agent 系统提示词 + 13 条规则 + 4 Agent 模板 + 多 Agent 编排 + 7 Gate 流程 + 工程化机制 + 文档协议 + 品牌库/种子模板 |
 | **创建引导** | `creation-guide` | 创建项目总编排：复杂度判定 + 场景识别 + 阶段路由 + 7 Gate 复核 |
 | | `creation-flow-intent` | 意图采集：从模糊想法到具体目标，前沿轮次制 |
 | | `creation-flow-features` | 功能共创：细化功能范围，P1/P2/P3 排序，切 MVP |
@@ -35,20 +36,38 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 
 ## 快速开始
 
-### 安装到 Claude Code
+### 快速安装
 
 ```bash
-# 方式一：一键安装（推荐）
-npx skills add EasyMintSkill
-
-# 方式二：手动复制
+# 方式：克隆后按所用 runtime 的 skills 目录放置
 git clone https://github.com/sixiang-world/EasyMintSkill.git
-cp -r EasyMintSkill/skills/* ~/.claude/skills/
+cp -r EasyMintSkill/skills/* <你的 runtime 的 skills 目录>/
 ```
+
+> 若该 runtime 提供了 skill 市场或 CLI 安装器（如 `npx skills add`），也可用其安装：把仓库来源指向 `sixiang-world/EasyMintSkill` 即可。是否支持取决于你的工具。
 
 ### 安装到其他 Agent Runtime
 
-EasyMint Skill 兼容所有支持 Agent Skills 标准的 runtime（Claude Code、Codex、Cursor、OpenClaw、Hermes 等）。将 `skills/` 目录下的任意 Skill 复制到对应 runtime 的 skills 目录即可。
+EasyMint Skill 兼容所有支持 Agent Skills 标准的 runtime。将 `skills/` 目录下的任意 Skill 复制到对应 runtime 的 skills 目录即可：
+
+```bash
+git clone https://github.com/sixiang-world/EasyMintSkill.git
+cp -r EasyMintSkill/skills/* <你的 runtime 的 skills 目录>/
+```
+
+各 runtime 的 skills 根目录不同（例如部分工具用 `~/.claude/skills/`，部分用 `~/.codex/skills/`），请按所用工具的实际约定放置。注意 `easymint-core` 自带 `assets/` 子目录，复制时需**整目录递归复制**，否则品牌库与模板会丢失。
+
+## 随包设计资产
+
+`easymint-core` 自带设计资产，开箱即用、无外部依赖：
+
+| 资产 | 路径 | 说明 |
+|---|---|---|
+| 种子 HTML 模板 | `skills/easymint-core/assets/templates/` | 4 个单文件模板：`landing.html` / `dashboard.html` / `form.html` / `detail.html`。共享一套 `:root` CSS 变量，无框架无依赖 |
+| 品牌设计规范库 | `skills/easymint-core/assets/brand-tokens/` | 74 个知名品牌的设计系统分析，YAML frontmatter 格式，可直接解析提取配色/排版/圆角/间距 token |
+| 来源与授权 | `skills/easymint-core/assets/THIRD_PARTY_NOTICES.md` | **使用品牌库前请先阅读**，含商标与字体授权限制说明 |
+
+> 品牌库仅作**风格参考**：请只提取设计语言（色值、字号梯度、间距节奏）作为起点，不要复制品牌名称、商标、logo 或专有字体。
 
 ### 触发方式
 
@@ -73,7 +92,8 @@ EasyMint Skill 兼容所有支持 Agent Skills 标准的 runtime（Claude Code�
 EasyMint Skill Pack
 ├── easymint-core          ← 方法论核心包
 │   ├── SKILL.md
-│   └── references/         (6 个方法论文档)
+│   ├── references/         (6 个方法论文档)
+│   └── assets/             (4 个模板 + 74 个品牌规范)
 ├── creation-guide          ← 创建引导总编排
 │   ├── SKILL.md
 │   ├── scenarios.md
@@ -81,7 +101,7 @@ EasyMint Skill Pack
 ├── creation-flow-*         ← 6 个创建引导子阶段
 ├── dev-docs                ← 文档规范
 ├── project-run             ← 运行配置
-├── ui-sync                 ← UI 状态同步
+├── ui-sync                 ← 状态同步
 └── ponytail*               ← 3 个反过度工程工具
 ```
 

@@ -110,7 +110,7 @@
 
 ## 六、中断恢复与 escalation
 
-- 委派失败：重试 ≤ 3 次 → Builder 写 `.agent-config/escalation.json` → 主 Agent 汇报原因和选项（重试/跳过/人工介入）。
+- 委派失败：重试 ≤ 3 次 → Builder 写 `.agentskill/escalation.json` → 主 Agent 汇报原因和选项（重试/跳过/人工介入）。
 - escalation.json 协议：`{ type: "escalation", from, taskId, reason, details, options: ["重试","跳过","人工介入"], timestamp }`。
 - decision.json 协议：主 Agent 在用户决策后写入 `{ taskId, action: "retry"|"skip"|"abort", reason?, timestamp }`，然后继续任务执行。
 - **进度监控者原则**：主 Agent 每轮自行核实真实进度（读 task.json / git diff / escalation.json / 代码），不盲信 status 字段——凭代码现状判断该重做/验收/跳过。
@@ -124,5 +124,5 @@
 4. Builder 完成 → 任务状态同步(id, "evaluating") → Task(agent="evaluator", taskId=id)
 5. 验收通过 → 状态自动回写 done → 更新开发记录快照与当日明细 → 下一任务
 6. 失败 → 重试 ≤3 → escalation.json → 汇报选项
-7. 全部完成 → 生成/更新 .agent-config/run.json → 简要总结
+7. 全部完成 → 生成/更新 .agentskill/run.json → 简要总结
 ```
