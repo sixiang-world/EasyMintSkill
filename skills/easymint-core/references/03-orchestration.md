@@ -1,16 +1,16 @@
 # 多 Agent 编排（03）
 
-> 来源：EasyMint `app/main/services/task/tool.ts`（task 工具）、`task/registry.ts`（委派记录）、`task/executor.ts`（子 Agent 执行器）、`task/collector.ts`（结果收集）、`task/parallel.ts`（并发）、`task/types.ts`（协议类型）、`agent-service.ts`（注入）。
+> 本文件承载多 Agent 编排的完整协议。
 > 本文件承载"三权分立 + 委派引擎"的完整协议。任何环境复现多 Agent 开发循环时，按此实现。
 
 ## 一、角色分工
 
 | 角色 | 职责 | 会话关系 |
 |---|---|---|
-| **Mint**（主会话） | 项目经理 + 架构师：需求理解、拆解、调度、进度监控、向用户汇报 | 唯一与用户对话的角色 |
+| **主 Agent**（主会话） | 项目经理 + 架构师：需求理解、拆解、调度、进度监控、向用户汇报 | 唯一与用户对话的角色 |
 | **Builder** | 按 task.json 任务写代码（tdd 先红后绿、lint+build、git commit、3 次失败写 escalation.json） | 独立会话，看不到主对话历史 |
 | **Evaluator** | 验收 Builder 产出（按项目类型：Web 用 Playwright 截图+交互验证；非 Web 用测试+curl+代码审查） | 独立会话，输出 PASS/FAIL |
-| **Mint-D** | UI 设计，产出 HTML 原型 | 独立会话，产出即止；预览/反馈归 Mint |
+| **设计师 Agent** | UI 设计，产出 HTML 原型 | 独立会话，产出即止；预览/反馈归主 Agent |
 | **标准白板子 Agent** | 查资料、读代码、分析、跑验证——通用委派，无模板人设 | 独立会话，回传结果/摘要 |
 
 ## 二、委派决策树（上下文保护是核心）
@@ -41,11 +41,11 @@
 
 | 参数 | 说明 |
 |---|---|
-| `agent` | 可选模板名（builder/evaluator/mint-designer/自定义）；省略 = 标准白板子 Agent |
+| `agent` | 可选模板名（builder/evaluator/designer/自定义）；省略 = 标准白板子 Agent |
 | `model` / `provider` | 可选覆盖子 Agent 模型（委派指定 > 模板 > 子 Agent 默认 > 全局） |
 | `description` | 任务简述（单任务模式） |
 | `prompt` | 详细任务指令（单任务模式） |
-| `taskId` | 关联的 task.json 任务 id——委派完成/中止时**自动回写** done/failed，任务面板实时同步 |
+| `taskId` | 关联的 task.json 任务 id——委派完成/中止时**自动回写** done/failed，任务配置面板实时同步 |
 | `outputSchema` | 结构化输出格式；子 Agent 必须调 yield 工具按此格式返回 |
 | `tasks` | 批量任务数组（每个可指定不同 agent/model/prompt/taskId/outputSchema） |
 | `readOnly` | 只读模式（验收/审查场景）——子 Agent 只配读工具 |
@@ -53,11 +53,11 @@
 
 ### 关键行为
 
-1. **异步委派**：tool.execute 创建委派记录后**立即返回**「已启动 N 个子 Agent 执行，完成后结果将注入会话」——不阻塞 Mint 模型循环。
-2. **结果注入**：委派完成经 onComplete 回调以系统消息注入主会话（触发新回合让 Mint 自动总结）。
-3. **单任务即时通知**：批量中单个任务完成/被用户停止 → 立即注入通知（不等整个委派收尾）；文本明确「已由用户中断」防 Mint 误判意外失败自动重启。
+1. **异步委派**：tool.execute 创建委派记录后**立即返回**「已启动 N 个子 Agent 执行，完成后结果将注入会话」——不阻塞主 Agent 模型循环。
+2. **结果注入**：委派完成经 onComplete 回调以系统消息注入主会话（触发新回合让主 Agent 自动总结）。
+3. **单任务即时通知**：批量中单个任务完成/被用户停止 → 立即注入通知（不等整个委派收尾）；文本明确「已由用户中断」防主 Agent 误判意外失败自动重启。
 4. **task.json 逐任务即时回写**：任务一进入终态立即 done/failed，不等委派整体收尾。
-5. **状态回写规则**：building/evaluating 由 Mint 手动调 set_task_status；done/failed 由委派结果自动回写，手动标记终态会被拒绝。
+5. **状态回写规则**：building/evaluating 由主 Agent 手动调 任务状态同步；done/failed 由委派结果自动回写，手动标记终态会被拒绝。
 
 ### 结果注入格式（formatDelegationResult）
 
@@ -67,7 +67,7 @@
 ⏺ <标题> — 完成 · 12s
 ⏺ <标题> — 失败
 
-详细段（Mint 汇报用）：
+详细段（主 Agent 汇报用）：
 详细结果:
 <标题>:
 <output 前 2000 字符>
@@ -104,24 +104,24 @@
 ## 五、系统消息协议（委派注入）
 
 - 注入方式：`injectSystemMessage(sid, text, kind, { triggerTurn })`。
-- kind：delegation / shell / project-created / direct-create / flow / handoff / summary / learn。
-- **triggerTurn 规则**：委派整体完成 → true（开回合让 Mint 总结）；事件通知 → false（不经回合）；单任务被停止且无后续 → true。
+- kind：delegation / shell / 项目初始化信号 / 直接创建信号 / flow / handoff / summary / learn。
+- **triggerTurn 规则**：委派整体完成 → true（开回合让主 Agent 总结）；事件通知 → false（不经回合）；单任务被停止且无后续 → true。
 - 内容前缀 `[系统消息]` 是模型识别的唯一依据（SDK 把 custom 映射为 user 角色，模型看不到 customType）。
 
 ## 六、中断恢复与 escalation
 
-- 委派失败：重试 ≤ 3 次 → Builder 写 `.easymint/escalation.json` → Mint 汇报原因和选项（重试/跳过/人工介入）。
+- 委派失败：重试 ≤ 3 次 → Builder 写 `.agent-config/escalation.json` → 主 Agent 汇报原因和选项（重试/跳过/人工介入）。
 - escalation.json 协议：`{ type: "escalation", from, taskId, reason, details, options: ["重试","跳过","人工介入"], timestamp }`。
-- decision.json 协议：Mint 在用户决策后写入 `{ taskId, action: "retry"|"skip"|"abort", reason?, timestamp }`，然后继续任务执行。
-- **进度监控者原则**：Mint 每轮自行核实真实进度（读 task.json / git diff / escalation.json / 代码），不盲信 status 字段——凭代码现状判断该重做/验收/跳过。
+- decision.json 协议：主 Agent 在用户决策后写入 `{ taskId, action: "retry"|"skip"|"abort", reason?, timestamp }`，然后继续任务执行。
+- **进度监控者原则**：主 Agent 每轮自行核实真实进度（读 task.json / git diff / escalation.json / 代码），不盲信 status 字段——凭代码现状判断该重做/验收/跳过。
 
-## 七、委派循环标准流程（Mint 视角）
+## 七、委派循环标准流程（主 Agent 视角）
 
 ```
 1. 读 task.json + 开发记录，核实真实进度
 2. 按依赖顺序找下一个未完成任务（以核实状态为准）
-3. set_task_status(id, "building") → Task(agent="builder", taskId=id)  ← 不转述任务全文
-4. Builder 完成 → set_task_status(id, "evaluating") → Task(agent="evaluator", taskId=id)
+3. 任务状态同步(id, "building") → Task(agent="builder", taskId=id)  ← 不转述任务全文
+4. Builder 完成 → 任务状态同步(id, "evaluating") → Task(agent="evaluator", taskId=id)
 5. 验收通过 → 状态自动回写 done → 更新开发记录快照与当日明细 → 下一任务
 6. 失败 → 重试 ≤3 → escalation.json → 汇报选项
 7. 全部完成 → 生成/更新 run.json → 简要总结
