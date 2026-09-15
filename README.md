@@ -8,18 +8,18 @@
 
 ## 这是什么？
 
-EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**，源自 EasyMint 桌面 AI 编程平台的核心 AI 能力。它把"从模糊想法到可维护项目"的完整流程拆成 13 个可独立加载的 Skill，覆盖：
+EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它把"从模糊想法到可维护项目"的完整流程拆成 13 个可独立加载的 Skill，覆盖：
 
-- **多 Agent 编排**：Mint（调度）/ Builder（编码）/ Evaluator（验收）/ Mint-D（设计）四角色模板
+- **多 Agent 编排**：主 Agent（调度）/ Builder（编码）/ Evaluator（验收）/ 设计师 Agent（设计）四角色模板
 - **7 Gate 创建引导**：意图采集 → 功能共创 → 成本校验 → 快速原型 → 技术方案 → 开发 → 验证
-- **工程化规范**：文档四层协议、task.json 任务管理、run.json 运行面板、UI 状态同步
+- **工程化规范**：文档四层协议、task.json 任务管理、run.json 运行配置、任务状态同步
 - **质量守护**：Ponytail 反过度工程三兄弟（主规则 / Code Review / 全仓审计）
 
 ## Skill 清单
 
 | 分类 | Skill | 用途 |
 |---|---|---|
-| **核心** | `easymint-core` | 全量能力承接包：Mint 系统提示词 + 13 条规则 + 4 Agent 模板 + 多 Agent 编排 + 7 Gate 流程 + 工程化机制 + 文档协议 |
+| **核心** | `easymint-core` | 方法论核心包：主 Agent 系统提示词 + 13 条规则 + 4 Agent 模板 + 多 Agent 编排 + 7 Gate 流程 + 工程化机制 + 文档协议 |
 | **创建引导** | `creation-guide` | 创建项目总编排：复杂度判定 + 场景识别 + 阶段路由 + 7 Gate 复核 |
 | | `creation-flow-intent` | 意图采集：从模糊想法到具体目标，前沿轮次制 |
 | | `creation-flow-features` | 功能共创：细化功能范围，P1/P2/P3 排序，切 MVP |
@@ -27,8 +27,8 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**，源�
 | | `creation-flow-prototype` | 快速原型：HTML 原型产出，渲染正确性审查，分档修改 |
 | | `creation-flow-techspec` | 技术方案：三重验证 + 环境就绪 + 落盘 task.json |
 | **工程化** | `dev-docs` | 项目文档规范：导航页 / 日期明细 / CHANGELOG / 技术架构四层 |
-| | `project-run` | 运行面板配置：`.easymint/run.json` 格式规范 + 脚本管理 |
-| | `ui-sync` | 新需求 UI 同步：task.json 状态与运行时进度条同步 |
+| | `project-run` | 运行配置：`run.json` 格式规范 + 脚本管理 |
+| | `ui-sync` | 新需求任务状态同步：task.json 状态与运行时进度同步 |
 | **质量守护** | `ponytail` | 反过度工程主规则：最懒可行方案，YAGNI，stdlib 优先 |
 | | `ponytail-review` | 过度工程 Code Review：diff 级别的复杂度审计 |
 | | `ponytail-audit` | 全仓过度工程审计：ranked list of what to delete/simplify |
@@ -71,9 +71,9 @@ EasyMint Skill 兼容所有支持 Agent Skills 标准的 runtime（Claude Code�
 
 ```
 EasyMint Skill Pack
-├── easymint-core          ← 核心承接包（唯一真相源）
+├── easymint-core          ← 方法论核心包
 │   ├── SKILL.md
-│   └── references/         (7 个方法论文档)
+│   └── references/         (6 个方法论文档)
 ├── creation-guide          ← 创建引导总编排
 │   ├── SKILL.md
 │   ├── scenarios.md
@@ -85,7 +85,7 @@ EasyMint Skill Pack
 └── ponytail*               ← 3 个反过度工程工具
 ```
 
-**依赖关系：** `creation-guide` 路由到 6 个 `creation-flow-*` 子 Skill；`easymint-core` 是方法论真相源，其他 Skill 是其具体落地。
+**依赖关系：** `creation-guide` 路由到 6 个 `creation-flow-*` 子 Skill；`easymint-core` 是方法论核心承载，其他 Skill 是其具体落地。
 
 ## 与同类的区别
 
@@ -129,6 +129,6 @@ MIT License - 详见 [LICENSE](LICENSE)
 
 ## 致谢
 
-- 方法论源自 [EasyMint](https://github.com/) 桌面 AI 编程平台
 - 多 Agent 编排灵感来自 Karpathy 的 autoresearch
 - 反过度工程理念来自 Ponytail 哲学
+- 方法论持续迭代，欢迎贡献和反馈
