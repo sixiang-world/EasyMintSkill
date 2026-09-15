@@ -3,13 +3,13 @@ name: ui-sync
 description: >-
   用户提出新需求、新建功能时使用。触发词如「做个」「加个」「新增」「写个」
   「需求」「我想要一个」「帮我实现一个」。不用于修改现有功能、修复 bug 或
-  调整配置——那些不是新需求。此 skill 确保 UI 状态与新增任务同步。
+  调整配置——那些不是新需求。此 skill 确保任务状态与新增需求同步。
 ---
 
-# UI Sync — 新需求 UI 同步
+# UI Sync — 新需求任务状态同步
 
-用户提了新需求后，按本清单确保 UI 反映最新状态。task.json 是任务状态的真相源，
-UI 会自动读取它——你只需在运行时状态切换时主动调用 UI 工具。
+用户提了新需求后，按本清单确保任务状态反映最新进度。task.json 是任务状态的真相源，
+运行时会自动读取它——你只需在运行时状态切换时主动同步状态。
 
 ## 检查清单
 
@@ -19,24 +19,49 @@ UI 会自动读取它——你只需在运行时状态切换时主动调用 UI �
 
 - 小微修改（只 1 个文件、≤20 行、无新依赖、无状态机变化）→ 不写 task.json，直接做，跳到第 2 步
 - 2 个及以上独立功能，或超出小微范围 → 写入 task.json，每条带 `status: "pending"`
-- 写完 task.json 后 **不要** 逐条调 `set_task_status`——pending 状态 UI 自动读取
+- 写完 task.json 后 **不要** 逐条调 `任务状态同步`——pending 状态自动读取
 
 ### 2. 开始执行时同步运行时状态
 
-进入编码/验收环节才调用 `set_task_status`，让进度条实时滚动：
+进入编码/验收环节才调用 `任务状态同步`，让进度实时更新：
 
-- 调 Builder 或自己动手前 → `set_task_status(id, "building")`
-- 交 Evaluator 验收前 → `set_task_status(id, "evaluating")`
+- 调 Builder 或自己动手前 → `任务状态同步(id, "building")`
+- 交 Evaluator 验收前 → `任务状态同步(id, "evaluating")`
 - **验收通过/失败/中止 → 状态由委派执行结果自动回写，不要手动标记**
 
-## 何时不要调用 UI 工具
+## 何时不要调用状态同步
 
-- 新增 pending 任务时（task.json 已记录，UI 自动读）
+- 新增 pending 任务时（task.json 已记录，自动读取）
 - 读取 task.json 之后（状态已在文件里）
 - 重置已完成任务时（除非用户明确要求重做）
 
 ## 工具说明
 
-- `set_task_status(taskId, status)` — 只在 building / evaluating 时手动调用（调 Builder 前、交 Evaluator 前）；done / failed / aborted 由委派执行结果自动回写，不要手动标记
+- `任务状态同步（task.json 读写或运行时任务 API）` — 只在 building / evaluating 时手动调用（调 Builder 前、交 Evaluator 前）；done / failed / aborted 由委派执行结果自动回写，不要手动标记
 
-此工具只在 Mint 主会话可用，Builder 和 Evaluator 调不了——由你在调度前后调用。
+此工具只在主会话可用，Builder 和 Evaluator 调不了——由你在调度前后调用。
+
+---
+
+## 🔴 CHECKPOINT · 需求范围确认
+
+- 新需求超出当前项目范围时（如「给这个 CLI 工具加个 Web 界面」），必须先确认是否新建项目或扩展范围，不能直接追加 task
+- 2 个及以上独立功能必须拆分为独立 task，不能合并为一个大 task
+- 小微修改判定模糊时（如「改一个配置但涉及 3 个文件」），按「写入 task.json」保守处理
+
+## 失败模式与恢复
+
+| 场景 | 触发条件 | 恢复动作 |
+|---|---|---|
+| task.json 不存在 | 项目还没初始化任务文件 | 先创建 task.json 结构，再追加任务；不跳过任务管理直接编码 |
+| 状态不同步 | task.json 状态与实际代码进度不一致 | 以代码现状为准核实真实进度，更新 task.json 状态，不盲信 status 字段 |
+| 误标记终态 | 手动把任务标记为 done/failed | 立即纠正——终态由委派执行结果自动回写，手动标记会被拒绝或导致状态混乱 |
+| 重复追加 task | 同一功能被多次写入 task.json | 去重合并，保留最新描述；不重复执行同一任务 |
+
+## 反例黑名单（不要做以下事情）
+
+- **不要把修 bug 当新需求**：修改现有功能、修复 bug、调整配置不走本 skill——那些不是新需求
+- **不要为小微修改写 task.json**：只 1 个文件、≤20 行、无新依赖的修改直接做，不写 task.json
+- **不要手动标记终态**：done/failed/aborted 由委派执行结果自动回写，手动标记会被拒绝
+- **不要逐条调状态同步**：新增 pending 任务时不调，pending 状态自动读取
+- **不要跳过 task.json 直接编码**：超出小微范围的新需求必须先写入 task.json，再进入编码
