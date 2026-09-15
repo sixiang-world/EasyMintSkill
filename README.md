@@ -16,13 +16,16 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 - **质量守护**：Ponytail 反过度工程三兄弟（主规则 / Code Review / 全仓审计）
 - **随包设计资产**：74 个品牌设计规范库（可直接解析取 token）+ 4 个单文件 HTML 起步模板
 
-## Skill 清单（26 个）
+## Skill 清单（27 个）
 
-### 入口层
+### 入口层（两层）
 
 | Skill | 用途 |
 |---|---|
-| `using-easymint` | **强制触发层**：任何回应或动作前先查 skill；Red Flags 反合理化表；skill 优先级；子 Agent 隔离阀 |
+| `using-easymint` | **调度层**：任何回应或动作前先查 skill；Red Flags 反合理化表；skill 优先级；子 Agent 隔离阀 |
+| `kickoff` | **创作起手层**：任何创作性工作前强制触发；三路径分类（Spike/Bounded/Architectural）+ HARD-GATE 批准闸门 + 隐藏复杂度单向升级 + 规格自审 + Visual Companion 可视化伴侣 |
+
+**为什么要两层**：`using-easymint` 解决"该用哪个 skill"，`kickoff` 解决"从哪开始"。只调度不起手，Agent 仍会直接冲进实现 —— 而"简单任务"恰恰是未经检验的假设造成返工最多的地方。
 
 ### 创建期（EasyMintSkill 原生优势）
 
@@ -69,32 +72,41 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 从想法到可维护项目的全链路：
 
 ```
-using-easymint（强制触发：先查 skill 再动手）
+using-easymint（调度层：先查 skill 再动手）
   │
-  ├─ 创建期（EasyMintSkill 原生：把模糊想法变成明确方案）
-  │   creation-guide ──┬→ creation-flow-intent     意图采集
-  │                    ├→ creation-flow-features   功能共创 + 切 MVP
-  │                    ├→ creation-flow-cost       成本校验
-  │                    ├→ creation-flow-prototype  快速原型 + 渲染审查
-  │                    └→ creation-flow-techspec   技术方案 + 环境就绪
-  │
-  ├─ 计划期（吸收 superpowers：把方案变成可执行任务）
-  │   writing-plans ──→ 任务拆解（Task 层 + Step 层，含 Files/Interfaces/验证）
-  │
-  ├─ 执行期（吸收 superpowers：带纪律地推进）
-  │   using-git-worktrees（隔离工作区 + 测试基线）
-  │        ↓
-  │   subagent-driven-development（每任务新 subagent + 两阶段审查）
-  │        ├→ test-driven-development       实现纪律
-  │        ├→ systematic-debugging          出 bug 时
-  │        ├→ dispatching-parallel-agents   独立问题域并发
-  │        └→ requesting/receiving-code-review  审查往返
-  │             ↓
-  │        verification-before-completion   声称完成前
-  │             ↓
-  │        finishing-a-development-branch   收尾（合并/PR/保留）
-  │
-  └─ 贯穿：ponytail 三兄弟（反过度工程）· dev-docs（文档）· project-run（运行配置）
+  └─ kickoff（创作起手层：分类 → 澄清 → 设计 → 拿批准）
+       │
+       ├─ Spike ──────────→ 探针调查 → 汇报建议（终点，不写文档）
+       │
+       ├─ Bounded ────────→ 对话内简短设计 → 用户批准 → 常规开发流程
+       │
+       └─ Architectural ──→ 澄清 → 2-3 方案 → 分节设计 → 写规格 → 规格自审 → 用户评审
+            │
+            ├─ 创建期（EasyMintSkill 原生：把模糊想法变成明确方案）
+            │   creation-guide ──┬→ creation-flow-intent     意图采集
+            │                    ├→ creation-flow-features   功能共创 + 切 MVP
+            │                    ├→ creation-flow-cost       成本校验
+            │                    ├→ creation-flow-prototype  快速原型 + 渲染审查
+            │                    └→ creation-flow-techspec   技术方案 + 环境就绪
+            │
+            ├─ 计划期（吸收 superpowers：把方案变成可执行任务）
+            │   writing-plans ──→ 任务拆解（Task 层 + Step 层，含 Files/Interfaces/验证）
+            │
+            └─ 执行期（吸收 superpowers：带纪律地推进）
+                using-git-worktrees（隔离工作区 + 测试基线）
+                     ↓
+                subagent-driven-development（每任务新 subagent + 两阶段审查）
+                     ├→ test-driven-development       实现纪律
+                     ├→ systematic-debugging          出 bug 时
+                     ├→ dispatching-parallel-agents   独立问题域并发
+                     └→ requesting/receiving-code-review  审查往返
+                          ↓
+                     verification-before-completion   声称完成前
+                          ↓
+                     finishing-a-development-branch   收尾（合并/PR/保留）
+
+  贯穿：ponytail 三兄弟（反过度工程）· dev-docs（文档）· project-run（运行配置）
+         kickoff 的 Visual Companion（对话中展示 mockup / 架构图 / 方案对比）
 ```
 
 **贯穿全流程的质量机制**（每个 skill 都配）：
@@ -159,6 +171,7 @@ cp -r EasyMintSkill/skills/* <你的 runtime 的 skills 目录>/
 
 | 你想说的话 | 触发的 Skill |
 |---|---|
+| **"我想做个…" / "帮我加个功能" / 任何要做新东西的请求** | **`kickoff`（先分类规模、澄清需求、拿批准）** |
 | "帮我创建一个项目" / "我想做个 app" | `creation-guide` |
 | "我想做个什么？帮我理理需求" | `creation-flow-intent` |
 | "帮我把功能拆一下" / "切个 MVP" | `creation-flow-features` |
@@ -178,16 +191,23 @@ cp -r EasyMintSkill/skills/* <你的 runtime 的 skills 目录>/
 | "做完了" / "修好了"（声称完成前） | `verification-before-completion` |
 | "这块写完了，收个尾" / "能合并吗" | `finishing-a-development-branch` |
 | "这几个问题一起修" | `dispatching-parallel-agents` |
+| "帮我画个架构图" / "对比这两种布局" | `kickoff` → Visual Companion |
 | "帮我写个 skill" / "这个 skill 该改改" | `writing-skills` |
 
-> **强制触发**：`using-easymint` 规定任何回应或动作前先查 skill——包括澄清性提问和翻代码。若你发现 Agent 没走流程直接动手，可以直接提醒它先查 skill。
+> **两层强制触发**：`using-easymint` 规定任何回应或动作前先查 skill（包括澄清性提问和翻代码）；`kickoff` 规定**任何创作性工作前**必须先分类规模、澄清需求并拿到批准。若你发现 Agent 没走流程直接动手，可以直接提醒它先查 skill。
 
 ## 架构
 
 ```
-EasyMint Skill Pack（26 个 skill）
+EasyMint Skill Pack（27 个 skill）
 │
-├── using-easymint              ← 入口层：强制触发 + Red Flags 表
+├── 【入口层：两层】
+│   ├── using-easymint          ← 调度层：先查 skill + Red Flags 表
+│   └── kickoff                 ← 创作起手层：三路径分类 + 批准闸门
+│       ├── SKILL.md
+│       ├── visual-companion.md        (可视化伴侣使用指南)
+│       ├── spec-document-reviewer-prompt.md
+│       └── scripts/                   (服务端 + 帧模板 + 跨平台启停脚本)
 │
 ├── 【创建期】
 │   ├── easymint-core           ← 方法论核心包
@@ -283,7 +303,8 @@ skills/
 │   ├── SKILL.md          # Skill 主文件（frontmatter + 工作流）
 │   ├── references/       # 参考文档（按需加载，只一层深）
 │   ├── assets/           # 随包资产（easymint-core：模板与品牌库）
-│   ├── scripts/          # 辅助脚本（subagent-driven-development）
+│   ├── scripts/          # 辅助脚本（subagent-driven-development / kickoff）
+│   ├── visual-companion.md  # 可视化伴侣指南（kickoff 专用）
 │   ├── scenarios.md      # 场景配置（creation-guide 专用）
 │   └── cost-map.md       # 成本映射表（creation-guide 专用）
 ```
@@ -311,10 +332,10 @@ MIT License - 详见 [LICENSE](LICENSE)
 - 7 Gate 创建流程、项目档案组合引擎、非程序员适配、文档四层协议
 - 设计资产：74 个品牌设计规范库 + 4 个种子 HTML 模板（来源见 `THIRD_PARTY_NOTICES.md`）
 
-**二、执行期纪律（吸收自 Superpowers）**
+**二、执行期纪律与创作起手（吸收自 Superpowers）**
 
 - [obra/superpowers](https://github.com/obra/superpowers) by Jesse Vincent / [Prime Radiant](https://primeradiant.com) — **MIT License**
-- 借鉴内容：强制触发层与 Red Flags 表、两阶段审查、fix loop 与 breaker、ledger 记账、Rulings not stalls、TDD / systematic-debugging / verification-before-completion / worktrees / branch-finishing / code-review 往返 / 并行派发 / writing-skills 元技能，以及全包的 Common Rationalizations 机制
+- 借鉴内容：强制触发层与 Red Flags 表、**创作起手层（三路径分类 + HARD-GATE 批准闸门 + Visual Companion 可视化伴侣）**、两阶段审查、fix loop 与 breaker、ledger 记账、Rulings not stalls、TDD / systematic-debugging / verification-before-completion / worktrees / branch-finishing / code-review 往返 / 并行派发 / writing-skills 元技能，以及全包的 Common Rationalizations 机制
 - 完整借鉴清单与改编说明见 [`skills/easymint-core/assets/THIRD_PARTY_NOTICES.md`](skills/easymint-core/assets/THIRD_PARTY_NOTICES.md#25-方法论来源obrasuperpowers)
 
 **其他**

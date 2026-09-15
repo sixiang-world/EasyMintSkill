@@ -66,6 +66,7 @@
 | 本包内容 | Superpowers 对应 |
 |---|---|
 | `using-easymint`（强制触发层 + Red Flags 表） | `using-superpowers` |
+| `kickoff`（三路径分类 + HARD-GATE 批准闸门 + 单向升级 + 规格自审 + Visual Companion 及其服务端脚本） | `brainstorming` 及附属 `visual-companion.md` / `scripts/` |
 | `test-driven-development` | 同名 skill |
 | `systematic-debugging`（含 root-cause-tracing / defense-in-depth / condition-based-waiting） | 同名 skill 及同名 references |
 | `verification-before-completion`（Iron Law + Gate Function） | 同名 skill |
@@ -83,6 +84,14 @@
 ### 改编说明
 
 本包的改编包括：正文改写为中文（`Red Flags` / `Common Rationalizations` 表与 prompt 模板保留英文原文，因这些措辞的心理阻断效果依赖原文）；去除平台专属内容（原项目的多 harness 适配层、特定运行时的工具名与配置路径）；项目状态目录统一为本包约定的 `.agentskill/`。
+
+`kickoff` 的 Visual Companion 服务端脚本另做了以下改编：
+
+- **移除第三方品牌注入**：原脚本会向页面注入作者品牌 logo，且该 logo 由第三方服务器（`primeradiant.com`）提供。本包**完全移除了品牌注入与外链请求**，服务端不再发起任何外部网络访问。
+- **移除遥测相关开关**：原脚本读取遥测禁用环境变量以决定是否显示品牌，本包连同该逻辑一并移除（无遥测即无需开关）。
+- **环境变量与路径中立化**：`BRAINSTORM_*` → `KICKOFF_*`，`.superpowers/brainstorm/` → `.agentskill/kickoff/`，服务端标识改为 `kickoff`。
+- **平台适配改为通用规则**：原文档按具体产品名列出 4 种启动方式，本包改写为"判断你的运行环境是否会回收后台进程"的通用决策规则，保留技术判据而去掉产品点名。
+- **修复 Windows 路径处理**：新增 `cygpath` 路径规范化，使 Git Bash 风格的 `/c/Users/...` 能正确转为 Node 可解析的原生路径（否则会生成 `\c\Users\...` 畸形目录）。
 
 **Superpowers 的 MIT 许可要求保留其版权声明**。若你分发本包，请一并保留本节。
 

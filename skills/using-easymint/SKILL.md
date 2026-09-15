@@ -37,6 +37,17 @@ description: Use when starting any conversation, before responding to any reques
 
 **委派子 Agent 之前**：先读 `easymint-core` 的 `references/03-orchestration.md`。
 
+## 两层入口
+
+本 skill 是**调度层**，`kickoff` 是**创作起手层**。两者都要用：
+
+| 层 | skill | 触发时机 | 职责 |
+|---|---|---|---|
+| 调度层 | `using-easymint`（本 skill） | 任何对话开始、任何请求之前 | 判断该加载哪个 skill |
+| 创作起手层 | `kickoff` | **任何创作性工作之前** | 分类规模 → 澄清需求 → 呈现设计 → 拿批准 → 派发 |
+
+**任何"要做出新东西"的请求**（新功能、新项目、新组件、改行为）—— 先经 `kickoff` 分类和澄清，**拿到用户批准后**，再进入后续流程。
+
 ## Skill Priority（多个 skill 同时命中时）
 
 **流程类 skill 优先于实现类 skill**——流程类定方法，实现类负责执行。
@@ -44,6 +55,7 @@ description: Use when starting any conversation, before responding to any reques
 | 请求 | 先调用 | 再调用 |
 |---|---|---|
 | "帮我做个 X" | `creation-guide`（判复杂度、路由） | 对应 `creation-flow-*` |
+| **任何创作性请求（新功能/新项目/改行为）** | **`kickoff`（分类规模 + 澄清 + 拿批准）** | **`creation-guide` 或 `writing-plans`** |
 | "修一下这个 bug" | `systematic-debugging` | 领域 skill |
 | "给这个功能写实现" | `test-driven-development` | 语言/框架 skill |
 | "这代码写得好吗" | `ponytail-review` | — |
@@ -110,12 +122,21 @@ description: Use when starting any conversation, before responding to any reques
 本 skill 是**入口层**，不承载具体方法论。执行任何任务时的完整链路：
 
 ```
-using-easymint（本 skill，强制触发）
-  └→ creation-guide / creation-flow-*（创建期：7 Gate 引导，产出任务清单）
-       └→ writing-plans（计划期：2-5 分钟粒度任务拆解）
-            └→ subagent-driven-development（执行期：任务循环 + 两阶段 review）
-                 ├→ test-driven-development（实现纪律）
-                 ├→ systematic-debugging（出了 bug）
-                 └→ verification-before-completion（声称完成前）
-                      └→ finishing-a-development-branch（收尾）
+using-easymint（本 skill，调度层：判断用哪个）
+  └→ kickoff（创作起手层：分类 Spike/Bounded/Architectural → 澄清 → 设计 → 拿批准）
+       │
+       ├─ Spike ──────────→ 探针调查 → 汇报建议（终点）
+       │
+       ├─ Bounded ────────→ 用户批准简短设计 → 常规开发流程（TDD 照常，无计划文档）
+       │
+       └─ Architectural ──→ 写规格 → 规格自审 → 用户评审 → writing-plans
+            └→ writing-plans（计划期：2-5 分钟粒度任务拆解）
+                 └→ subagent-driven-development（执行期：任务循环 + 两阶段 review）
+                      ├→ test-driven-development（实现纪律）
+                      ├→ systematic-debugging（出了 bug）
+                      ├→ requesting-code-review / receiving-code-review（审查循环）
+                      └→ verification-before-completion（声称完成前）
+                           └→ finishing-a-development-branch（收尾）
 ```
+
+创建期（`creation-guide` / `creation-flow-*` 的 7 Gate 引导）可以**替代或补充** Architectural 路径的前半段 —— 当创建期流程已经产出了规格与任务清单时，从 `writing-plans` 或直接进入执行期即可，不必重复走 `kickoff` 的澄清阶段。**但批准闸门不可省。**
