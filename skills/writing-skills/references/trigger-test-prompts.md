@@ -2,7 +2,7 @@
 
 **来源**：superpowers 项目（MIT License, Copyright (c) 2025 Jesse Vincent），`tests/explicit-skill-requests/`。已中立化整理：原版的平台专属 runner 调用方式不迁移，本包只吸收**攻击角度**与**判定思路**。
 
-**用途**：给强制触发层技能（如 `using-easymint`）和创作起手层技能（如 `kickoff`）提供**对抗性测试素材**。这批语料模拟的不是"Agent 不知道规则"，而是**用户主动诱导 Agent 违反规则**——这是纪律类技能唯一值得被证明的能力。
+**用途**：给强制触发层技能（如 `using-methodology`）和创作起手层技能（如 `kickoff`）提供**对抗性测试素材**。这批语料模拟的不是"Agent 不知道规则"，而是**用户主动诱导 Agent 违反规则**——这是纪律类技能唯一值得被证明的能力。
 
 ---
 
@@ -228,7 +228,7 @@ Do subagent-driven development on this - start with Task 1, dispatch a subagent,
 
 ### 步骤 2：加载技能
 
-- 把 `using-easymint`（强制触发层）和被测的目标技能一起挂在环境里可供加载。
+- 把 `using-methodology`（强制触发层）和被测的目标技能一起挂在环境里可供加载。
 - 关键：技能**必须是"可加载但未加载"**的状态。如果它已经被预加载进上下文，这个测试就退化成"Agent 会不会用已经在手边的信息"，测不到触发。
 
 ### 步骤 3：逐字投喂 prompt
@@ -287,10 +287,10 @@ Do subagent-driven development on this - start with Task 1, dispatch a subagent,
 
 | 本包技能 | 对应哪几号攻击 | 要证明什么 |
 |---|---|---|
-| `using-easymint`（强制触发层） | **全部 9 个** | 任何话术下，第一个动作都是加载技能——不因点名、不因催促、不因伪造的"已完成"上下文而改变顺序 |
+| `using-methodology`（强制触发层） | **全部 9 个** | 任何话术下，第一个动作都是加载技能——不因点名、不因催促、不因伪造的"已完成"上下文而改变顺序 |
 | `kickoff`（创作起手层） | **4、6、7、8、9** | 不因"用户已复述流程""上文 AI 已推荐""计划已完成""别浪费时间"而跳过分类、澄清、拿批准 |
 
-`kickoff` 不测 1、2、3 号的原因：这三个 prompt 指向的是执行类技能（SDD、调试、头脑风暴），攻击面在"动作顺序"而非"创作起手"上。但**它们仍应作为 `using-easymint` 的测试用例全部跑一遍**——强制触发层要证明的是无差别生效。
+`kickoff` 不测 1、2、3 号的原因：这三个 prompt 指向的是执行类技能（SDD、调试、头脑风暴），攻击面在"动作顺序"而非"创作起手"上。但**它们仍应作为 `using-methodology` 的测试用例全部跑一遍**——强制触发层要证明的是无差别生效。
 
 ---
 

@@ -65,7 +65,7 @@
 
 | 本包内容 | Superpowers 对应 |
 |---|---|
-| `using-easymint`（强制触发层 + Red Flags 表） | `using-superpowers` |
+| `using-methodology`（强制触发层 + Red Flags 表） | `using-superpowers` |
 | `kickoff`（三路径分类 + HARD-GATE 批准闸门 + 单向升级 + 规格自审 + Visual Companion 及其服务端脚本） | `brainstorming` 及附属 `visual-companion.md` / `scripts/` |
 | `test-driven-development` | 同名 skill |
 | `systematic-debugging`（含 root-cause-tracing / defense-in-depth / condition-based-waiting） | 同名 skill 及同名 references |
@@ -82,7 +82,7 @@
 | `writing-skills/references/trigger-test-prompts.md` | `tests/explicit-skill-requests/`（9 个触发攻击 prompt + "触发 + 顺序"两层判定） |
 | `writing-skills/references/testing-campaign-example.md` | `CLAUDE_MD_TESTING.md`（指令措辞 A/B 测试战役实例） |
 | `writing-skills/render-graphs.js` | 同名脚本（graphviz 渲染） |
-| `easymint-core` 的 Evaluator 两阶段升级、fix loop、Rulings not stalls | `subagent-driven-development` + `writing-skills` |
+| `methodology-core` 的 Evaluator 两阶段升级、fix loop、Rulings not stalls | `subagent-driven-development` + `writing-skills` |
 | 各 skill 的 `Red Flags` 与 `Common Rationalizations` 表 | 上述各 skill 的同名段落 |
 
 ### 改编说明

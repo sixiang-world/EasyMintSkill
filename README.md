@@ -1,14 +1,14 @@
-# EasyMint Skill
+# Methodology Skill Pack
 
 > 从想法到可维护项目的全流程 AI 开发方法论。4 角色编排 + 7 Gate 创建引导 + 工程化规范，让 AI 开发不只是写代码，而是交付可维护的产品。
 
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-blue)](https://skills.sh)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Skills](https://img.shields.io/badge/13%20skills-pack-green)]()
+[![Skills](https://img.shields.io/badge/27%20skills-pack-green)]()
 
 ## 这是什么？
 
-EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它把"从模糊想法到可维护项目"的完整流程拆成 13 个可独立加载的 Skill，覆盖：
+Methodology Skill Pack 是一套 **AI 编程 Agent 的全流程开发方法论**。它把"从模糊想法到可维护项目"的完整流程拆成 27 个可独立加载的 Skill，覆盖：
 
 - **多 Agent 编排**：主 Agent（调度）/ Builder（编码）/ Evaluator（验收）/ 设计师 Agent（设计）四角色模板
 - **7 Gate 创建引导**：意图采集 → 功能共创 → 成本校验 → 快速原型 → 技术方案 → 开发 → 验证
@@ -23,7 +23,7 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 本包是**平台中立**的，不绑定任何特定运行时 —— 这是设计选择，但有代价：
 
 > **技能文件本身是惰性的。** `SKILL.md` 放在磁盘上，不会自己生效。
-> 入口层 `using-easymint`（先查 skill）和 `kickoff`（创作前先分类与拿批准）
+> 入口层 `using-methodology`（先查 skill）和 `kickoff`（创作前先分类与拿批准）
 > 的存在意义就是**强制触发** —— 但它们自己也需要被触发。
 
 | 你的宿主平台 | 入口技能能否自动触发 | 你需要做什么 |
@@ -37,8 +37,8 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 三个应对选项，按推荐度排序：
 
 1. **接入可选注入器** —— [`integrations/session-start`](integrations/README.md) 在会话启动时把入口技能全文注入上下文，平台中立、不猜环境
-2. **手工引导** —— 新会话开头说一句「先读 `using-easymint`，然后再回应我」
-3. **写进系统提示词** —— 把 `skills/using-easymint/SKILL.md` 的内容作为规则前置
+2. **手工引导** —— 新会话开头说一句「先读 `using-methodology`，然后再回应我」
+3. **写进系统提示词** —— 把 `skills/using-methodology/SKILL.md` 的内容作为规则前置
 
 > 若你发现 Agent 没走流程直接动手，可以直接提醒它先查 skill。
 
@@ -48,16 +48,16 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 
 | Skill | 用途 |
 |---|---|
-| `using-easymint` | **调度层**：任何回应或动作前先查 skill；Red Flags 反合理化表；skill 优先级；子 Agent 隔离阀 |
+| `using-methodology` | **调度层**：任何回应或动作前先查 skill；Red Flags 反合理化表；skill 优先级；子 Agent 隔离阀 |
 | `kickoff` | **创作起手层**：任何创作性工作前强制触发；三路径分类（Spike/Bounded/Architectural）+ HARD-GATE 批准闸门 + 隐藏复杂度单向升级 + 规格自审 + Visual Companion 可视化伴侣 |
 
-**为什么要两层**：`using-easymint` 解决"该用哪个 skill"，`kickoff` 解决"从哪开始"。只调度不起手，Agent 仍会直接冲进实现 —— 而"简单任务"恰恰是未经检验的假设造成返工最多的地方。
+**为什么要两层**：`using-methodology` 解决"该用哪个 skill"，`kickoff` 解决"从哪开始"。只调度不起手，Agent 仍会直接冲进实现 —— 而"简单任务"恰恰是未经检验的假设造成返工最多的地方。
 
-### 创建期（EasyMintSkill 原生优势）
+### 创建期（本包原生优势）
 
 | 分类 | Skill | 用途 |
 |---|---|---|
-| **核心** | `easymint-core` | 方法论核心包：主 Agent 系统提示词 + 13 条规则 + 4 Agent 模板 + 多 Agent 编排 + 7 Gate 流程 + 工程化机制 + 文档协议 + 品牌库/种子模板 |
+| **核心** | `methodology-core` | 方法论核心包：主 Agent 系统提示词 + 13 条规则 + 4 Agent 模板 + 多 Agent 编排 + 7 Gate 流程 + 工程化机制 + 文档协议 + 品牌库/种子模板 |
 | **创建引导** | `creation-guide` | 创建项目总编排：复杂度判定 + 场景识别 + 阶段路由 + 7 Gate 复核 |
 | | `creation-flow-intent` | 意图采集：从模糊想法到具体目标，前沿轮次制 |
 | | `creation-flow-features` | 功能共创：细化功能范围，P1/P2/P3 排序，切 MVP |
@@ -98,7 +98,7 @@ EasyMint Skill 是一套 **AI 编程 Agent 的全流程开发方法论**。它�
 从想法到可维护项目的全链路：
 
 ```
-using-easymint（调度层：先查 skill 再动手）
+using-methodology（调度层：先查 skill 再动手）
   │
   └─ kickoff（创作起手层：分类 → 澄清 → 设计 → 拿批准）
        │
@@ -108,7 +108,7 @@ using-easymint（调度层：先查 skill 再动手）
        │
        └─ Architectural ──→ 澄清 → 2-3 方案 → 分节设计 → 写规格 → 规格自审 → 用户评审
             │
-            ├─ 创建期（EasyMintSkill 原生：把模糊想法变成明确方案）
+            ├─ 创建期（本包原生：把模糊想法变成明确方案）
             │   creation-guide ──┬→ creation-flow-intent     意图采集
             │                    ├→ creation-flow-features   功能共创 + 切 MVP
             │                    ├→ creation-flow-cost       成本校验
@@ -155,10 +155,12 @@ using-easymint（调度层：先查 skill 再动手）
 | **文件即接口** | 任务简报/实现报告/审查包/账本全部走文件，避免"42k 字符派发里 99% 是粘贴的历史"这类上下文事故 |
 | **禁止预判问题** | 不得指示审查者忽略某问题。出现 "do not flag" / "at most Minor" 这类措辞即是在给自己省一轮审查 |
 
-> 完整机制见 `skills/subagent-driven-development/SKILL.md` 与 `skills/easymint-core/references/03-orchestration.md`。
+> 完整机制见 `skills/subagent-driven-development/SKILL.md` 与 `skills/methodology-core/references/03-orchestration.md`。
 
 
 ## 快速开始
+
+> **关于命名**：本包原名 EasyMint Skill，现已改为平台中立的 **Methodology Skill Pack**，包内所有技能、目录、引用均不再携带任何品牌名。**仓库地址仍为 `sixiang-world/EasyMintSkill`**（GitHub 上的仓库重命名会带来一段时间链接不可用，故暂未改动），下方 clone 命令中的仓库名属正常现象。本包与 [EasyMint](https://github.com/tianemon/EasyMint) 项目**互相独立**——仅在设计资产上取材于该项目，版权归因见 [`skills/methodology-core/assets/THIRD_PARTY_NOTICES.md`](skills/methodology-core/assets/THIRD_PARTY_NOTICES.md)。
 
 ### 快速安装
 
@@ -172,14 +174,14 @@ cp -r EasyMintSkill/skills/* <你的 runtime 的 skills 目录>/
 
 ### 安装到其他 Agent Runtime
 
-EasyMint Skill 兼容所有支持 Agent Skills 标准的 runtime。将 `skills/` 目录下的任意 Skill 复制到对应 runtime 的 skills 目录即可：
+Methodology Skill Pack 兼容所有支持 Agent Skills 标准的 runtime。将 `skills/` 目录下的任意 Skill 复制到对应 runtime 的 skills 目录即可：
 
 ```bash
 git clone https://github.com/sixiang-world/EasyMintSkill.git
 cp -r EasyMintSkill/skills/* <你的 runtime 的 skills 目录>/
 ```
 
-各 runtime 的 skills 根目录不同（例如部分工具用 `~/.claude/skills/`，部分用 `~/.codex/skills/`），请按所用工具的实际约定放置。注意 `easymint-core` 自带 `assets/` 子目录，复制时需**整目录递归复制**，否则品牌库与模板会丢失。
+各 runtime 的 skills 根目录不同（例如部分工具用 `~/.claude/skills/`，部分用 `~/.codex/skills/`），请按所用工具的实际约定放置。注意 `methodology-core` 自带 `assets/` 子目录，复制时需**整目录递归复制**，否则品牌库与模板会丢失。
 
 ### 让入口技能自动生效（可选但推荐）
 
@@ -194,13 +196,13 @@ bash <包路径>/integrations/session-start --format <nested|snake|sdk> --skills
 
 ## 随包设计资产
 
-`easymint-core` 自带设计资产，开箱即用、无外部依赖：
+`methodology-core` 自带设计资产，开箱即用、无外部依赖：
 
 | 资产 | 路径 | 说明 |
 |---|---|---|
-| 种子 HTML 模板 | `skills/easymint-core/assets/templates/` | 4 个单文件模板：`landing.html` / `dashboard.html` / `form.html` / `detail.html`。共享一套 `:root` CSS 变量，无框架无依赖 |
-| 品牌设计规范库 | `skills/easymint-core/assets/brand-tokens/` | 74 个知名品牌的设计系统分析，YAML frontmatter 格式，可直接解析提取配色/排版/圆角/间距 token |
-| 来源与授权 | `skills/easymint-core/assets/THIRD_PARTY_NOTICES.md` | **使用品牌库前请先阅读**，含商标与字体授权限制说明 |
+| 种子 HTML 模板 | `skills/methodology-core/assets/templates/` | 4 个单文件模板：`landing.html` / `dashboard.html` / `form.html` / `detail.html`。共享一套 `:root` CSS 变量，无框架无依赖 |
+| 品牌设计规范库 | `skills/methodology-core/assets/brand-tokens/` | 74 个知名品牌的设计系统分析，YAML frontmatter 格式，可直接解析提取配色/排版/圆角/间距 token |
+| 来源与授权 | `skills/methodology-core/assets/THIRD_PARTY_NOTICES.md` | **使用品牌库前请先阅读**，含商标与字体授权限制说明 |
 
 > 品牌库仅作**风格参考**：请只提取设计语言（色值、字号梯度、间距节奏）作为起点，不要复制品牌名称、商标、logo 或专有字体。
 
@@ -231,15 +233,15 @@ bash <包路径>/integrations/session-start --format <nested|snake|sdk> --skills
 | "帮我画个架构图" / "对比这两种布局" | `kickoff` → Visual Companion |
 | "帮我写个 skill" / "这个 skill 该改改" | `writing-skills` |
 
-> **两层强制触发**：`using-easymint` 规定任何回应或动作前先查 skill（包括澄清性提问和翻代码）；`kickoff` 规定**任何创作性工作前**必须先分类规模、澄清需求并拿到批准。若你发现 Agent 没走流程直接动手，可以直接提醒它先查 skill。
+> **两层强制触发**：`using-methodology` 规定任何回应或动作前先查 skill（包括澄清性提问和翻代码）；`kickoff` 规定**任何创作性工作前**必须先分类规模、澄清需求并拿到批准。若你发现 Agent 没走流程直接动手，可以直接提醒它先查 skill。
 
 ## 架构
 
 ```
-EasyMint Skill Pack（27 个 skill）
+Methodology Skill Pack（27 个 skill）
 │
 ├── 【入口层：两层】
-│   ├── using-easymint          ← 调度层：先查 skill + Red Flags 表
+│   ├── using-methodology          ← 调度层：先查 skill + Red Flags 表
 │   └── kickoff                 ← 创作起手层：三路径分类 + 批准闸门
 │       ├── SKILL.md
 │       ├── visual-companion.md        (可视化伴侣使用指南)
@@ -247,7 +249,7 @@ EasyMint Skill Pack（27 个 skill）
 │       └── scripts/                   (服务端 + 帧模板 + 跨平台启停脚本)
 │
 ├── 【创建期】
-│   ├── easymint-core           ← 方法论核心包
+│   ├── methodology-core           ← 方法论核心包
 │   │   ├── SKILL.md
 │   │   ├── references/          (6 个方法论文档)
 │   │   └── assets/              (4 个模板 + 74 个品牌规范)
@@ -288,8 +290,8 @@ EasyMint Skill Pack（27 个 skill）
 
 **依赖关系：**
 
-- `using-easymint` 是全局入口，路由到所有其他 skill
-- 创建期：`creation-guide` 路由到 6 个 `creation-flow-*`；`easymint-core` 是方法论核心承载
+- `using-methodology` 是全局入口，路由到所有其他 skill
+- 创建期：`creation-guide` 路由到 6 个 `creation-flow-*`；`methodology-core` 是方法论核心承载
 - 计划 → 执行：`writing-plans` 的产物（方案文件）是 `subagent-driven-development` 的输入
 - 执行期内部有明确转入关系（见各 skill 末尾「与其他 skill 的关系」表）
 - `verification-before-completion` 是所有 skill 的收口；`finishing-a-development-branch` 以前者的绿测证据为前置
@@ -297,7 +299,7 @@ EasyMint Skill Pack（27 个 skill）
 
 ## 与同类的区别
 
-| 维度 | EasyMint Skill | superpowers | ai-team-orchestration | multi-agent-orchestration |
+| 维度 | Methodology Skill Pack | superpowers | ai-team-orchestration | multi-agent-orchestration |
 |---|---|---|---|---|
 | 角色数 | 4（含设计师） | 2（实现者 + 审查者） | 3 | 2（code+ui） |
 | 创建引导 | **7 Gate 全流程** | 仅 brainstorming 一环 | 无 | 无 |
@@ -339,7 +341,7 @@ skills/
 ├── <skill-name>/
 │   ├── SKILL.md          # Skill 主文件（frontmatter + 工作流）
 │   ├── references/       # 参考文档（按需加载，只一层深）
-│   ├── assets/           # 随包资产（easymint-core：模板与品牌库）
+│   ├── assets/           # 随包资产（methodology-core：模板与品牌库）
 │   ├── scripts/          # 辅助脚本（subagent-driven-development / kickoff）
 │   ├── visual-companion.md  # 可视化伴侣指南（kickoff 专用）
 │   ├── scenarios.md      # 场景配置（creation-guide 专用）
@@ -377,7 +379,7 @@ MIT License - 详见 [LICENSE](LICENSE)
 
 - [obra/superpowers](https://github.com/obra/superpowers) by Jesse Vincent / [Prime Radiant](https://primeradiant.com) — **MIT License**
 - 借鉴内容：强制触发层与 Red Flags 表、**创作起手层（三路径分类 + HARD-GATE 批准闸门 + Visual Companion 可视化伴侣）**、两阶段审查、fix loop 与 breaker、ledger 记账、Rulings not stalls、TDD / systematic-debugging / verification-before-completion / worktrees / branch-finishing / code-review 往返 / 并行派发 / writing-skills 元技能，以及全包的 Common Rationalizations 机制
-- 完整借鉴清单与改编说明见 [`skills/easymint-core/assets/THIRD_PARTY_NOTICES.md`](skills/easymint-core/assets/THIRD_PARTY_NOTICES.md#25-方法论来源obrasuperpowers)
+- 完整借鉴清单与改编说明见 [`skills/methodology-core/assets/THIRD_PARTY_NOTICES.md`](skills/methodology-core/assets/THIRD_PARTY_NOTICES.md#25-方法论来源obrasuperpowers)
 
 **其他**
 

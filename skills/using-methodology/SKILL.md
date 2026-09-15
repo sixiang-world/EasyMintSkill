@@ -1,5 +1,5 @@
 ---
-name: using-easymint
+name: using-methodology
 description: Use when starting any conversation, before responding to any request, or whenever about to write code, plan work, or fix a problem - establishes the mandatory rule that relevant skills must be invoked before any response or action, including clarifying questions.
 ---
 
@@ -35,7 +35,7 @@ description: Use when starting any conversation, before responding to any reques
 
 **进入计划模式之前**：若尚未做需求澄清，先调用 `creation-flow-intent` 或 `creation-guide`。
 
-**委派子 Agent 之前**：先读 `easymint-core` 的 `references/03-orchestration.md`。
+**委派子 Agent 之前**：先读 `methodology-core` 的 `references/03-orchestration.md`。
 
 ## 两层入口
 
@@ -43,7 +43,7 @@ description: Use when starting any conversation, before responding to any reques
 
 | 层 | skill | 触发时机 | 职责 |
 |---|---|---|---|
-| 调度层 | `using-easymint`（本 skill） | 任何对话开始、任何请求之前 | 判断该加载哪个 skill |
+| 调度层 | `using-methodology`（本 skill） | 任何对话开始、任何请求之前 | 判断该加载哪个 skill |
 | 创作起手层 | `kickoff` | **任何创作性工作之前** | 分类规模 → 澄清需求 → 呈现设计 → 拿批准 → 派发 |
 
 **任何"要做出新东西"的请求**（新功能、新项目、新组件、改行为）—— 先经 `kickoff` 分类和澄清，**拿到用户批准后**，再进入后续流程。
@@ -122,7 +122,7 @@ description: Use when starting any conversation, before responding to any reques
 本 skill 是**入口层**，不承载具体方法论。执行任何任务时的完整链路：
 
 ```
-using-easymint（本 skill，调度层：判断用哪个）
+using-methodology（本 skill，调度层：判断用哪个）
   └→ kickoff（创作起手层：分类 Spike/Bounded/Architectural → 澄清 → 设计 → 拿批准）
        │
        ├─ Spike ──────────→ 探针调查 → 汇报建议（终点）

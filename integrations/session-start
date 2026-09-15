@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # SessionStart 上下文注入器（平台中立版）
 #
-# 作用：把入口技能 using-easymint 的全文注入到会话启动时的上下文里，
+# 作用：把入口技能 using-methodology 的全文注入到会话启动时的上下文里，
 #       让"先查 skill"这条规则在 Agent 看到用户消息之前就已经在它的上下文里。
 #
 # 为什么需要它：
 #   技能包里的 SKILL.md 是**惰性文件** —— 放在磁盘上，不会自己生效。
-#   如果没有这一层注入，using-easymint 和 kickoff 都得靠"模型自己想起来去查"，
+#   如果没有这一层注入，using-methodology 和 kickoff 都得靠"模型自己想起来去查"，
 #   而它们的存在意义恰恰是"强制触发"。注入器解决的就是这个自举问题。
 #
 # 用法：
@@ -74,7 +74,7 @@ if [[ -z "$SKILLS_DIR" ]]; then
   SKILLS_DIR="$(cd "${SCRIPT_DIR}/.." && pwd)"
 fi
 
-ENTRY_FILE="${SKILLS_DIR}/skills/using-easymint/SKILL.md"
+ENTRY_FILE="${SKILLS_DIR}/skills/using-methodology/SKILL.md"
 
 if [[ ! -r "$ENTRY_FILE" ]]; then
   printf '读不到入口技能：%s\n请用 --skills-dir 指定技能包根目录。\n' "$ENTRY_FILE" >&2
@@ -96,7 +96,7 @@ escape_for_json() {
 
 entry_escaped="$(escape_for_json "$entry_content")"
 
-context="<EXTREMELY_IMPORTANT>\n本技能包已加载。\n\n**以下是入口技能 using-easymint 的完整内容 —— 它定义了'任何回应或动作前先查 skill'这条规则。创作性任务另经 kickoff 分类与批准。其余技能按名调用：**\n\n${entry_escaped}\n</EXTREMELY_IMPORTANT>"
+context="<EXTREMELY_IMPORTANT>\n本技能包已加载。\n\n**以下是入口技能 using-methodology 的完整内容 —— 它定义了'任何回应或动作前先查 skill'这条规则。创作性任务另经 kickoff 分类与批准。其余技能按名调用：**\n\n${entry_escaped}\n</EXTREMELY_IMPORTANT>"
 
 # 用 printf 而非 heredoc —— 某些 bash 5.3+ 版本上 heredoc 会挂起。
 case "$FORMAT" in

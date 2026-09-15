@@ -1,5 +1,5 @@
 ---
-name: easymint-core
+name: methodology-core
 description: >-
   多 Agent AI 编程方法论核心包。承载主 Agent 的提示词体系、Agent 模板、
   多 Agent 委派编排、7 Gate 创建引导、工程化机制（权限/经验沉淀/上下文管理/
@@ -16,7 +16,7 @@ description: >-
 | 来源 | 内容 | 承载方 |
 |---|---|---|
 | 已写成 skill 的 12 个 | creation-guide 家族（6）、dev-docs、project-run、ui-sync、ponytail 家族（3） | 各自独立 SKILL.md（已安装） |
-| **本包承接** | 主提示词、Agent 模板、委派编排、创建引导骨架与判定表、工程化机制、文档协议 | **本 Skill（easymint-core）** |
+| **本包承接** | 主提示词、Agent 模板、委派编排、创建引导骨架与判定表、工程化机制、文档协议 | **本 Skill（methodology-core）** |
 
 使用顺序：先按任务匹配本包 references 获取方法论与协议，再按需加载对应已安装 skill 的细节。
 
@@ -31,7 +31,7 @@ description: >-
 | 工程化：权限治理、经验沉淀、上下文管理、系统消息、skill 体系 | `references/05-engineering.md` |
 | 文档四层体系、task.json/run.json 规范、委派产物协议 | `references/06-docs-protocol.md` |
 
-**执行期 skill 的归属**：执行期的完整纪律（TDD、系统化调试、验证铁律、工作区隔离、分支收尾、审查往返、并行派发、写 plan、SDD 任务循环、写 skill 元技能）已拆为**独立 skill**，不在本包 references 内。入口见 `using-easymint`，索引见仓库 README「Skill 清单」。
+**执行期 skill 的归属**：执行期的完整纪律（TDD、系统化调试、验证铁律、工作区隔离、分支收尾、审查往返、并行派发、写 plan、SDD 任务循环、写 skill 元技能）已拆为**独立 skill**，不在本包 references 内。入口见 `using-methodology`，索引见仓库 README「Skill 清单」。
 
 > 为什么拆出去：`description` 只写触发条件、不概述流程，才能让运行时在正确时机加载；塞进 references 会让它们失去自动触发的机会，变成「知道有但不会主动用」。本包 references 只承载**需要全文注入或跨 skill 共用的方法论**。
 

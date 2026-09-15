@@ -280,13 +280,13 @@ your own exam.
 如果用户同意启用伴侣，继续之前先读详细指南：
 `skills/kickoff/visual-companion.md`
 
-## 与 `using-easymint` 的关系
+## 与 `using-methodology` 的关系
 
 这两个技能是**两层不同的入口**，都要用：
 
 | 层 | 技能 | 触发时机 | 职责 |
 |---|---|---|---|
-| **调度层** | `using-easymint` | 任何对话开始、任何请求之前 | 判断该加载哪个技能 |
+| **调度层** | `using-methodology` | 任何对话开始、任何请求之前 | 判断该加载哪个技能 |
 | **创作起手层** | `kickoff`（本技能） | **任何创作性工作之前** | 分类规模 → 澄清需求 → 呈现设计 → 拿批准 → 派发 |
 
-**`using-easymint` 负责"用哪个"，`kickoff` 负责"从哪开始"。** 一个创作性任务，先经 `kickoff` 分类和澄清，再到 `writing-plans`、`subagent-driven-development` 等后续技能。
+**`using-methodology` 负责"用哪个"，`kickoff` 负责"从哪开始"。** 一个创作性任务，先经 `kickoff` 分类和澄清，再到 `writing-plans`、`subagent-driven-development` 等后续技能。

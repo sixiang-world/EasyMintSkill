@@ -14,7 +14,7 @@ description: Use when creating new skills, editing existing skills, or verifying
 
 **REQUIRED BACKGROUND:** 你必须先理解 `test-driven-development`。那个 skill 定义了 RED-GREEN-REFACTOR 循环；本 skill 把它适配到文档。
 
-**Personal skills 放在运行时约定的 skills 目录**——项目级放 `.agentskill/skills/`（见 `easymint-core` 的资源位置约定）。**用户级目录各运行时约定不同，按所用运行时自己的约定放置即可，不要照搬别家的路径。**
+**Personal skills 放在运行时约定的 skills 目录**——项目级放 `.agentskill/skills/`（见 `methodology-core` 的资源位置约定）。**用户级目录各运行时约定不同，按所用运行时自己的约定放置即可，不要照搬别家的路径。**
 
 **Official guidance:** 官方 skill 编写最佳实践见 [references/anthropic-best-practices.md](references/anthropic-best-practices.md)，与本文的 TDD 取向互补。
 
